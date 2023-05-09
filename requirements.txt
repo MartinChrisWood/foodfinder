@@ -1,3 +1,4 @@
 pytest
+pytest-pythonpath
 flask
 shapely

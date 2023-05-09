@@ -1,8 +1,7 @@
-# %%
 import pandas as pd
 import re
 
-# %%
+
 Days = [
     "Monday",
     "Tuesday",
@@ -18,7 +17,6 @@ days = [x.lower() for x in Days]
 weekdays = Days + DAYS + days
 
 
-# %%
 def parse_opening_str(text, id_name):
     row_list = []
     result = re.search(
@@ -40,15 +38,10 @@ def parse_opening_str(text, id_name):
     return row_list
 
 
-# %%
 def parse_open_times(df, col_in="Opening", col_id="Name"):
     df_out = df.apply(
         lambda x: pd.DataFrame(parse_opening_str(x[col_in], x[col_id])), axis=1
     ).to_list()
+    # next step: convert times
 
     return pd.concat(df_out)
-
-
-# %%
-df = pd.read_csv("../../data/foodbanks.csv")
-parse_open_times(df)
