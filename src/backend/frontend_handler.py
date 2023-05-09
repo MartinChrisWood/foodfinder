@@ -12,7 +12,7 @@ def foodfind_nearest(place_from = Point(53.2251,1.2813) , dist_range = None,
         place_from (_type_, optional): Location from which the user searches. Defaults to central Sheffield = Point(53.2251,1.2813).
         dist_range (_type_, optional): Possible restriction on distance willing to travel (km). Defaults to None.
         days (dict, optional): _description_. Defaults to {"Monday" : True, 'Tuesday': True, 'Wednesday': True, 'Thursday':True, 'Friday': True, 'Saturday':true, 'Sunday': True}.
-        num_results (int, optional): _description_. Defaults to 20.
+        num_results (int, optional): _description_. Defaults to 20. 
 
     Returns:
         Geopandas dataframe: _description_
