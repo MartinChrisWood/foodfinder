@@ -15,7 +15,7 @@ def foodfind_nearest(place_from = Point(53.2251,1.2813) , dist_range = None,
         num_results (int, optional): _description_. Defaults to 20. 
 
     Returns:
-        Geopandas dataframe: _description_
+        Geopandas dataframe: _description_ 
     """
     return None
 
