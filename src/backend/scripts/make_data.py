@@ -69,7 +69,8 @@ def foodbank_coords(DATA_DIR, pc_data):
     foodbanks.rename(columns={"Postcode": "postcode"}, inplace=True)
     foodbanks = pd.merge(foodbanks, pc_data[["postcode", "lat", "long"]], on="postcode")
     foodbanks.columns = foodbanks.columns.str.lower()
-    foodbanks.to_csv(f"{DATA_DIR}/foodbank_coords.csv")
+    foodbanks = foodbanks.reset_index(names="ID")
+    foodbanks.to_csv(f"{DATA_DIR}/foodbank_coords.csv", index=False)
 
     return None
 
