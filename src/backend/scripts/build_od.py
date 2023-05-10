@@ -51,12 +51,8 @@ def main():
         os.path.join(
             config["DATA_DIR"], config["FOODBANK_FILENAME"],
         ),
-        usecols=["postcode", "lat", "long"],
+        usecols=["ID", "postcode", "lat", "long"],
     )
-
-    # TODO: change this temporary preprocessing step to match required columns
-    foodbank_df["ID"] = np.arange(0, len(foodbank_df))
-    foodbank_df = foodbank_df[["ID", "postcode", "lat", "long"]]
 
     # read postcode data
     postcode_df = pd.read_csv(
