@@ -2,8 +2,8 @@
 
 {% block title %} Sheffield foodbank finder {% endblock %}
 
-{% block content %}
-    <div id="menu" style="width: 30%; float:left">
+{% block search %}
+
         <div>
             <form name="myForm" action="" method="post" onsubmit="">
 
@@ -21,7 +21,7 @@
             </select>
 
             <label for="pcode">Choose postcode:</label>
-            <input type="text" id="pcode">
+            <input type="text" id="pcode" size="5">
             <script>
                 $( function() {
                     var availableTags = [
@@ -35,36 +35,52 @@
                 } );
             </script>
 
-            <label for="travel_range">Choose feasible travel range:</label>
-            <input type="range" min="0" max="100" name="travel_range" />
 
-            <input type="submit" value="submit" />
+            <label for="range_val">Choose feasible travel range:</label>
+            <input type="range" min="0" max="100" value = '100' name="travel_range"
+              onchange="updateValue(this.value)" size = "10"/>
+              <form method="POST">
+                <input type="text" id="range_val" name="range_val" readonly size="2">
+            </form>
+              <script>
+                function updateValue(val) {
+                    document.getElementById("range_val").value = val*val/100;
+                }
+            </script>
+
+            <br>
+            <input type="submit" value="Search" />
         </form>
-        </div>
+
         <form method="POST">
             <label for="coords">Coordinates:</label>
             <input type="text" id="coords" name="coords" readonly>
         </form>
     </div>
 
-    <div id="map" style="height: 500px; width: 70%"></div>
-    <script>
-        var map = L.map('map').setView([53.4, -1.4], 11);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-        }).addTo(map);
 
-        var marker;
-        map.on('click', function(e) {
-            if (marker) {
-                map.removeLayer(marker);
-            }
-            marker = L.marker(e.latlng).addTo(map);
-            $('#lat-input').val(e.latlng.lat);
-            $('#lng-input').val(e.latlng.lng);
-            document.getElementById('coords').value = e.latlng.toString()
-        });
-    </script>
+{% endblock %}
+
+{% block results %}
+<div id="map" style="height: 500px;"></div>
+<script>
+    var map = L.map('map').setView([53.4, -1.4], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+    }).addTo(map);
+
+    var marker;
+    map.on('click', function(e) {
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng).addTo(map);
+        $('#lat-input').val(e.latlng.lat);
+        $('#lng-input').val(e.latlng.lng);
+        document.getElementById('coords').value = e.latlng.toString()
+    });
+</script>
+</div>
 {% endblock %}
