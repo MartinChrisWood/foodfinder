@@ -3,20 +3,18 @@
 {% block title %} Sheffield foodbank finder {% endblock %}
 
 {% block search %}
-<script>
-    document.getElementById("range_val").value = 100
-</script>
+<body onload="updateValue(100)">
         <div>
-            <form name="myForm"
-            action={{ url_for("index") }} method="POST"
+            <form name="myForm" onsubmit="search" action="search" method="POST"
             enctype="multipart/form-data">
 
             <label for="query_type"><h2>Visit food bank</h2></label>
             <br>
             <h5>
-            <input type="radio" name="query_type" value="ASAP" checked> as soon as possible, or <br>
-            <input type="radio" name="query_type" value="nearest">  on these specific days: </h5>
-
+            <input type="radio" name="query_type" value="ASAP" checked> as soon as possible, or
+            <br>
+            <input type="radio" name="query_type" value="nearest">  on these specific days:
+            </h5>
                   <input type="checkbox" id="mon" name="mon" checked>
                   <label for="mon">Mon &ensp;</label>
                   <input type="checkbox" id="tue" name="tue" checked>
@@ -32,13 +30,22 @@
                   <label for="sat">Sat &ensp;</label>
                   <input type="checkbox" id="sun" name="sun" checked>
                   <label for="sun">Sun &ensp;</label>
+            <br>
+            <br>
+            <script>
+                function checkPostcode(val) {
+                    if ([{% for pcode in pc_list %}
+                            "{{pcode}}",
+                        {% endfor %}
+                    ].includes(val)) document.getElementById("check_mark").innerHTML = '&#10004' ;
+                    else document.getElementById("check_mark").innerHTML = '&#10060' ;
+                }
+            </script>
 
-
-
-<br>
-<br>
             <label for="pcode">Choose a postcode:</label>
-            <input type="text" id="pcode" size="5">
+            <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
+              onclick="checkPostcode(this.value)" onchange="checkPostcode(this.value)">
+            <p id="check_mark" style="display:inline"></p>
             <script>
                 $( function() {
                     var availableTags = [
@@ -52,22 +59,21 @@
                 } );
             </script>
 
-<br>
-<br>
-            <label for="range_val">Feasible travel range:</label>
-            <input type="range" min="0" max="100" value = '100' name="travel_range"
-              onchange="updateValue(this.value)" size = "10"/>
-              <form method="POST">
-                <input type="text" id="range_val" name="range_val" readonly size="2">
-            </form>
-              <script>
+            <br>
+            <br>
+            <script>
                 function updateValue(val) {
                     document.getElementById("range_val").value = val*val/100;
                 }
             </script>
+            <label for="travel_range">Feasible travel range:</label>
+            <input type="range" min="0" max="100" value = '100' name="travel_range"
+              onchange="updateValue(this.value)"/>
+
+            <input type="text" id="range_val" name="range_val" readonly size="1">km
 
             <br>
-            <input type="submit" value="Search" />
+            <input type="submit" value="SEND"/>
         </form>
 
         <br>
@@ -102,6 +108,16 @@
         $('#lng-input').val(e.latlng.lng);
         document.getElementById('coords').value = e.latlng.toString()
     });
+
 </script>
+    <!--
+    for (var i = 0; i < {{foodbanks}}.length; i++) {
+			L.marker([{{foodbanks}}[i][1], {{foodbanks}}[i][2]]).addTo(map)
+				.bindPopup({{foodbanks}}[i][0]);
+		}
+    -->
+
+    {{ foodbanks|safe }}
+
 </div>
 {% endblock %}
