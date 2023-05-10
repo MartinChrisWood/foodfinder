@@ -7,7 +7,9 @@ from zipfile import ZipFile
 
 def postcode_to_coords(DATA_DIR):
 
-
+    """Ingests and processes postcodes and coordinates for
+    all postcodes in Sheffield district
+    """
 
     URL = "http://download.geonames.org/export/zip/GB_full.csv.zip"
     filename = URL.split("/")[-1]
@@ -60,6 +62,9 @@ def postcode_to_coords(DATA_DIR):
 
 
 def foodbank_coords(DATA_DIR, pc_data):
+    """Assigns coordinates to foodbank postcodes and
+    tidies formatting
+    """
     foodbanks = pd.read_csv(f"{DATA_DIR}/foodbanks.csv")
     foodbanks.rename(columns={"Postcode": "postcode"}, inplace=True)
     foodbanks = pd.merge(foodbanks, pc_data[["postcode", "lat", "long"]], on="postcode")
