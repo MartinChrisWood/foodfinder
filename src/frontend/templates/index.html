@@ -3,24 +3,41 @@
 {% block title %} Sheffield foodbank finder {% endblock %}
 
 {% block search %}
-
+<script>
+    document.getElementById("range_val").value = 100
+</script>
         <div>
-            <form name="myForm" action="" method="post" onsubmit="">
+            <form name="myForm"
+            action={{ url_for("index") }} method="POST"
+            enctype="multipart/form-data">
 
-            <label for="color">Choose marker color:</label>
-            <input type="radio" name="color" value="red">Red
-            <input type="radio" name="color" value="blue">Blue
-            <input type="radio" name="color" value="green">Green
+            <label for="query_type"><h2>Visit food bank</h2></label>
+            <br>
+            <h5>
+            <input type="radio" name="query_type" value="ASAP" checked> as soon as possible, or <br>
+            <input type="radio" name="query_type" value="nearest">  on these specific days: </h5>
 
-            <label for="postcode">Choose postcode:</label>
-            <select name="postcode" method="GET" action="/">
-                <option value="{{pc_list[0]}}" selected>{{pc_list[0]}}</option>
-                {% for postcode in pc_list[1:] %}
-                  <option value="{{postcode}}">{{postcode}}</option>
-                {% endfor %}
-            </select>
+                  <input type="checkbox" id="mon" name="mon" checked>
+                  <label for="mon">Mon &ensp;</label>
+                  <input type="checkbox" id="tue" name="tue" checked>
+                  <label for="tue">Tue &ensp;</label>
+                  <input type="checkbox" id="wed" name="wed" checked>
+                  <label for="wed">Wed &ensp;</label>
+                  <input type="checkbox" id="thu" name="thu" checked>
+                  <label for="thu">Thu &ensp;</label>
+                  <input type="checkbox" id="fri" name="fri" checked>
+                  <label for="fri">Fri &ensp;</label>
+                  <br>
+                  <input type="checkbox" id="sat" name="sat" checked>
+                  <label for="sat">Sat &ensp;</label>
+                  <input type="checkbox" id="sun" name="sun" checked>
+                  <label for="sun">Sun &ensp;</label>
 
-            <label for="pcode">Choose postcode:</label>
+
+
+<br>
+<br>
+            <label for="pcode">Choose a postcode:</label>
             <input type="text" id="pcode" size="5">
             <script>
                 $( function() {
@@ -35,8 +52,9 @@
                 } );
             </script>
 
-
-            <label for="range_val">Choose feasible travel range:</label>
+<br>
+<br>
+            <label for="range_val">Feasible travel range:</label>
             <input type="range" min="0" max="100" value = '100' name="travel_range"
               onchange="updateValue(this.value)" size = "10"/>
               <form method="POST">
@@ -51,6 +69,9 @@
             <br>
             <input type="submit" value="Search" />
         </form>
+
+        <br>
+        <br>
 
         <form method="POST">
             <label for="coords">Coordinates:</label>
