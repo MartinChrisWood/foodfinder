@@ -28,3 +28,9 @@ Preferred unittesting framework is PyTest:
 ```shell
 pytest
 ```
+
+## Auto-assigning coordinates to postcodes and foodbanks
+
+```shell
+python src/make_data.py
+```

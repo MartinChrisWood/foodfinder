@@ -1,4 +1,6 @@
 pytest
+pytest-pythonpath
+pandas
 flask
 ipykernel
 urllib3==1.26.6
@@ -9,3 +11,5 @@ geopandas
 folium
 mapclassify
 matplotlib
+shapely
+pre-commit
