@@ -1,25 +1,38 @@
-<!DOCTYPE html>
-<html>
+{% extends 'layout.html' %}
+
+{% block title %} Sheffield foodbank finder {% endblock %}
+
+{% block content %}
 <head>
-    <title>Map Example</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 </head>
 <body>
-    <div id="map" style="height: 500px;"></div>
-    <form id="coords-form" method="POST" action="/map">
-        <input type="hidden" name="lat" id="lat-input">
-        <input type="hidden" name="lng" id="lng-input">
-        <button type="submit">Submit</button>
-    </form>
+    <div id="menu" style="width: 30%; float:left">
+        <div>
+            <form name="myForm" action="" method="post" onsubmit="">
+
+            <label for="color">Choose marker color:</label>
+            <input type="radio" name="color" value="red">Red
+            <input type="radio" name="color" value="blue">Blue
+            <input type="radio" name="color" value="green">Green
+        </div>
+        <form method="POST">
+            <label for="coords">Coordinates:</label>
+            <input type="text" id="coords" name="coords" readonly>
+        </form>
+    </div>
+
+    <div id="map" style="height: 500px; width: 70%"></div>
     <script>
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        var map = L.map('map').setView([53.4, -1.4], 11);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                 '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 18,
         }).addTo(map);
+
         var marker;
         map.on('click', function(e) {
             if (marker) {
@@ -28,7 +41,7 @@
             marker = L.marker(e.latlng).addTo(map);
             $('#lat-input').val(e.latlng.lat);
             $('#lng-input').val(e.latlng.lng);
+            document.getElementById('coords').value = e.latlng.toString()
         });
     </script>
-</body>
-</html>
+{% endblock %}
