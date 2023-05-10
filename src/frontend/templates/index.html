@@ -3,12 +3,6 @@
 {% block title %} Sheffield foodbank finder {% endblock %}
 
 {% block content %}
-<head>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
-</head>
-<body>
     <div id="menu" style="width: 30%; float:left">
         <div>
             <form name="myForm" action="" method="post" onsubmit="">
@@ -17,6 +11,35 @@
             <input type="radio" name="color" value="red">Red
             <input type="radio" name="color" value="blue">Blue
             <input type="radio" name="color" value="green">Green
+
+            <label for="postcode">Choose postcode:</label>
+            <select name="postcode" method="GET" action="/">
+                <option value="{{pc_list[0]}}" selected>{{pc_list[0]}}</option>
+                {% for postcode in pc_list[1:] %}
+                  <option value="{{postcode}}">{{postcode}}</option>
+                {% endfor %}
+            </select>
+
+            <label for="pcode">Choose postcode:</label>
+            <input type="text" id="pcode">
+            <script>
+                $( function() {
+                    var availableTags = [
+                        {% for pcode in pc_list %}
+                            "{{pcode}}",
+                        {% endfor %}
+                    ];
+                    $( "#pcode" ).autocomplete({
+                    source: availableTags
+                    });
+                } );
+            </script>
+
+            <label for="travel_range">Choose feasible travel range:</label>
+            <input type="range" min="0" max="100" name="travel_range" />
+
+            <input type="submit" value="submit" />
+        </form>
         </div>
         <form method="POST">
             <label for="coords">Coordinates:</label>
