@@ -1,6 +1,9 @@
+# %%
 # define
-from datetime import datetime
+from datetime import datetime, timedelta
 from shapely.geometry import Point
+import geopandas as gpd
+import pandas as pd
 
 
 def foodfind_nearest(
@@ -36,11 +39,15 @@ def foodfind_nearest(
 
 
 def foodfind_asap(
-    place_from=Point(53.2251, 1.2813),
-    dist_range=None,
-    time_stamp=datetime.now(),
-    num_results=20,
-):
+    od_matrix,
+    foodbank_table,
+    post_code: str = "S1 1AA",
+    # place_from=Point(53.2251, 1.2813),
+    dist_range: float = 5000,     # 5km
+    time_stamp: datetime = datetime.now(),
+    time_window: int = 1,     # today plus tomorrow
+    # num_results: int = 20
+) -> gpd.GeoDataFrame:
     """Find nearby food band that is open now or asap.
 
     Args:
@@ -55,4 +62,23 @@ def foodfind_asap(
     Returns:
         Geopandas dataframe: _description_
     """
-    return None
+
+    days = [time_stamp.strftime("%A"),
+            (time_stamp + timedelta(days=time_window)).strftime("%A")]
+
+    foodbanks_nearby = od_matrix[(od_matrix["postcode"]==post_code) &
+                                 (od_matrix["distance"]<=dist_range)].sort_values("distance")
+    
+    timely_foodbanks = foodbank_table[foodbank_table["opening"].str.contains("|".join(days))]
+    timely_foodbanks_nearby = pd.merge(foodbanks_nearby[["ID", "distance"]], timely_foodbanks, on="ID")
+    
+    #foodbanks_nearby = foodbank_table[foodbank_table["ID"].isin(foodbanks_nearby)]
+
+    #foodbanks_nearby = foodbanks_nearby[foodbanks_nearby["opening"].str.contains("|".join(days))]
+    return timely_foodbanks_nearby
+
+# %%
+od_matrix = pd.read_csv("../data/foodbank_postcode_od.csv")
+foodbank_table = pd.read_csv("../data/foodbank_coords.csv")
+
+foodfind_asap(od_matrix, foodbank_table)
