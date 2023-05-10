@@ -49,7 +49,7 @@ def parse_open_times(df, col_in="Opening", col_id="Name"):
         lambda x: pd.DataFrame(parse_opening_str(x[col_in], x[col_id])), axis=1
     ).to_list()
 
-    return pd.concat(df_out)
+    return pd.concat(df_out).reset_index(drop=True)
 
 
 def sort_by_time_to_open(df_out, time_now=datetime.now()):
@@ -71,4 +71,4 @@ def sort_by_time_to_open(df_out, time_now=datetime.now()):
     now_msk = (df_out["day_start"] <= time_weird) & (df_out["day_end"] >= time_weird)
     df_out["time_to_open"] = (df_out["day_start"] - time_weird) % np.timedelta64(7, "D")
     df_out.loc[now_msk, "time_to_open"] = np.timedelta64(0, "D")
-    return df_out.sort_values("time_to_open")
+    return df_out.sort_values("time_to_open").reset_index(drop=True)
