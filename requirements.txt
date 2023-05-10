@@ -3,3 +3,9 @@ flask
 ipykernel
 urllib3==1.26.6
 toml
+pandas
+requests
+geopandas
+folium
+maplclassify
+matplotlib

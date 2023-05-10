@@ -1,1 +1,6 @@
 DATA_DIR = "data"
+
+# OD matrix building
+FOODBANK_FILENAME = "foodbank_coords.csv"
+POSTCODE_FILENAME = "shef_pc_coords_lookup.csv"
+OD_FILENAME = "foodbank_postcode_od.csv"
