@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import pandas as pd
 from src.backend.frontend_handler import foodfind_asap, foodfind_nearest
-from datetime import datetime
+from datetime import datetime, timedelta
 from shapely.geometry import Point
 import re
 
@@ -56,11 +56,11 @@ def search():
         coords = Point(float(gr[1]), float(gr[0]))
     else:
         coords = Point(0, 0)
-    # check valid location input
-    print(coords)
+    # TODO check valid location input
+
     range = float(request.form["range_val"])
     days = {
-        x: (1 if x in request.form.keys() else 0)
+        x: (True if x in request.form.keys() else False)
         for x in [
             "Monday",
             "Tuesday",
@@ -71,7 +71,8 @@ def search():
             "Sunday",
         ]
     }
-    # foodbanks = query_backend( above parameters)
+    print(days)
+    # query_backend( above parameters)
     if query_type == "nearest":
         if query_location == "postcode":
             foodbanks = foodfind_nearest(
@@ -96,7 +97,10 @@ def search():
 
     foodbanks["color"] = "cyan"  # based on days to opening
     msk_today = foodbanks.opening.str.contains(datetime.now().strftime("%A"))
-    foodbanks.loc[msk_today, "color"] = "blue"
+    msk_tomorrow = foodbanks.opening.str.contains(
+        (datetime.now() + timedelta(days=1)).strftime("%A")
+    )
+    foodbanks.loc[msk_today | msk_tomorrow, "color"] = "blue"
 
     return render_template(
         "index.html",
