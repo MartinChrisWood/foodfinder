@@ -39,13 +39,16 @@
                     if ([{% for pcode in pc_list %}
                             "{{pcode}}",
                         {% endfor %}
-                    ].includes(val)) document.getElementById("check_mark").innerHTML = '&#10004' ;
+                    ].includes(val)) {
+                        document.getElementById("check_mark").innerHTML = '&#10004' ;
+                        document.querySelector('input[name="query_location"][value="postcode"]').checked = true;
+                    }
                     else document.getElementById("check_mark").innerHTML = '&#10060' ;
                 }
             </script>
 
-             <input type="radio" name="query_location" value="postcode" checked> <label for="pcode">Choose a postcode:</label>
-             <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
+            <input type="radio" name="query_location" value="postcode" checked> <label for="pcode">Choose a postcode:</label>
+            <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
               onclick="checkPostcode(this.value)" onchange="checkPostcode(this.value)">
             <p id="check_mark" style="display:inline"></p>
             <script>
@@ -86,13 +89,10 @@
         <br>
         <br>
         <br>
-
-
-
     </div>
 
-
 {% endblock %}
+
 
 {% block results %}
 <div id="map" style="height: 500px;"></div>
@@ -119,6 +119,7 @@
         $('#lat-input').val(e.latlng.lat);
         $('#lng-input').val(e.latlng.lng);
         document.getElementById('coords').value = e.latlng.toString()
+        document.querySelector('input[name="query_location"][value="coords"]').checked = true;
     });
 
     {% for i in range(0, df.shape[0]) %}
@@ -139,4 +140,5 @@
       {{ foodbanks|safe }}
     </table>
 </div>
+
 {% endblock %}
