@@ -32,7 +32,7 @@
                   <label for="sun">Sun &ensp;</label>
             <br>
             <br>
-            <label for="query_type"><h6>Enter location</h6></label>
+            <label for="query_type"><h5>From location:</h5></label>
             <br>
             <script>
                 function checkPostcode(val) {
@@ -62,22 +62,23 @@
             </script>
 
             <br>
-            <input type="radio" name="query_location" value="coords" > <label for="coords">Coordinates:</label>
+            <input type="radio" name="query_location" value="coords" >
+            <label for="coords">Map coordinates:</label>
             <input type="text" id="coords" name="coords" readonly size = "11">
 
             <br>
             <br>
             <script>
                 function updateValue(val) {
-                    document.getElementById("range_val").value = val*val/100;
+                    document.getElementById("range_val").value = Math.round(val*val*val/1000)/10;
                 }
             </script>
-            <label for="travel_range">Feasible travel range:</label>
+            <label for="travel_range"><h5>Within feasible travel range:</h5></label>
             <input type="range" min="0" max="100" value = '100' name="travel_range"
               onchange="updateValue(this.value)"/>
 
             <input type="text" id="range_val" name="range_val" readonly size="1">km
-
+            <br>
             <br>
             <input type="submit" value="Search"/>
         </form>
