@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point
-from utils import convert_to_geodataframe, snap_to_nearest_postcode
+from src.backend.utils import convert_to_geodataframe, snap_to_nearest_postcode
 
 # set the valid methods for filtering/searching and other constants
 VALID_METHODS = {"postcode", "place_from"}
