@@ -2,4 +2,14 @@ pytest
 pytest-pythonpath
 pandas
 flask
+ipykernel
+urllib3==1.26.6
+toml
+pandas
+requests
+geopandas
+folium
+mapclassify
+matplotlib
 shapely
+pre-commit
