@@ -69,6 +69,7 @@ def foodfind_nearest(
             - 'lat' foodbank lattitude in CRS EPSG 4326
             - 'long' foodbank longitude in CRS EPSG 4326
             - 'geometry' foodbank geometry in CRS EPSG 4326
+        Note: this dataframe will be empty if no foodbanks are found
 
     Raises
     ------
@@ -168,6 +169,7 @@ def foodfind_asap(
             - 'lat' foodbank lattitude in CRS EPSG 4326
             - 'long' foodbank longitude in CRS EPSG 4326
             - 'geometry' foodbank geometry in CRS EPSG 4326
+        Note: this dataframe will be empty if no foodbanks are found
 
     Raises
     ------
