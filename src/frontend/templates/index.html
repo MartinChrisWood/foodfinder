@@ -11,9 +11,9 @@
             <label for="query_type"><h2>Visit food bank</h2></label>
             <br>
             <h5>
-            <input type="radio" name="query_type" value="ASAP" checked> as soon as possible, or
+            <input type="radio" name="query_type" value="ASAP"> as soon as possible, or
             <br>
-            <input type="radio" name="query_type" value="nearest">  on these specific days:
+            <input type="radio" name="query_type" value="nearest" checked>  on these specific days:
             </h5>
                   <input type="checkbox" id="mon" name="mon" checked>
                   <label for="mon">Mon &ensp;</label>
@@ -39,13 +39,16 @@
                     if ([{% for pcode in pc_list %}
                             "{{pcode}}",
                         {% endfor %}
-                    ].includes(val)) document.getElementById("check_mark").innerHTML = '&#10004' ;
+                    ].includes(val)) {
+                        document.getElementById("check_mark").innerHTML = '&#10004' ;
+                        document.querySelector('input[name="query_location"][value="postcode"]').checked = true;
+                    }
                     else document.getElementById("check_mark").innerHTML = '&#10060' ;
                 }
             </script>
 
-             <input type="radio" name="query_location" value="postcode" checked> <label for="pcode">Choose a postcode:</label>
-             <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
+            <input type="radio" name="query_location" value="postcode" checked> <label for="pcode">Choose a postcode:</label>
+            <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
               onclick="checkPostcode(this.value)" onchange="checkPostcode(this.value)">
             <p id="check_mark" style="display:inline"></p>
             <script>
@@ -86,13 +89,10 @@
         <br>
         <br>
         <br>
-
-
-
     </div>
 
-
 {% endblock %}
+
 
 {% block results %}
 <div id="map" style="height: 500px;"></div>
@@ -104,28 +104,41 @@
         maxZoom: 18,
     }).addTo(map);
 
+
     var marker;
     map.on('click', function(e) {
         if (marker) {
             map.removeLayer(marker);
         }
-        marker = L.marker(e.latlng).addTo(map);
+        marker = L.marker(e.latlng,
+        {icon: L.ExtraMarkers.icon({
+            icon: 'fa-number',
+            number: 0,
+            markerColor: 'pink'
+        })}).addTo(map);
         $('#lat-input').val(e.latlng.lat);
         $('#lng-input').val(e.latlng.lng);
         document.getElementById('coords').value = e.latlng.toString()
+        document.querySelector('input[name="query_location"][value="coords"]').checked = true;
     });
 
     {% for i in range(0, df.shape[0]) %}
     L.marker([{{ df.loc[i, 'lat'] }}, {{ df.loc[i, 'long'] }}],
-        {icon: L.icon({iconUrl: 'http://leafletjs.com/examples/custom-icons/leaf-red.png'})}
-        ).addTo(map)
+        {icon: L.ExtraMarkers.icon({
+            icon: 'fa-number',
+            number: {{i+1}},
+            markerColor: "{{ df.loc[i, 'color'] }}"
+        })}).addTo(map)
         .bindPopup('{{ df.loc[i, 'Name'] }}');
     {% endfor %}
 
 </script>
 
-
-    {{ foodbanks|safe }}
-
 </div>
+<div class="container">
+    <table>
+      {{ foodbanks|safe }}
+    </table>
+</div>
+
 {% endblock %}
