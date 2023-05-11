@@ -18,6 +18,17 @@ foodbanks = pd.DataFrame(
     columns=["Name", "lat", "long", "color"],
 )
 
+
+def html_table(df):
+    df_out = df.assign(Rank=range(len(df)))
+    df_out["Rank"] = df_out["Rank"] + 1
+    # df_out['color'] =  based on days to open
+    df_html = df_out[["Rank", "Name"]].to_html(
+        classes="table table-striped table-bordered table-sm table-hover", index=False
+    )
+    return df_html
+
+
 app = Flask(__name__)
 
 
@@ -31,19 +42,23 @@ def index():
 @app.route("/search", methods=["POST"])
 def search():
     query_type = request.form["query_type"]
+    query_location = request.form["query_location"]
     postcode = request.form["pcode"]
+    coords = request.form["coords"]
+    # check valid location input
+
     range = request.form["range_val"]
     days = {
         x: (1 if x in request.form.keys() else 0)
         for x in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
     }
     # foodbanks = query_backend( above parameters)
-    print(f"{query_type, days, postcode, range }")
-    # return f"{query_type, days, postcode, range }"
+    print(request.form)
+    print(f"{query_type, query_location, postcode, coords, range, days}")
     return render_template(
         "index.html",
         pc_list=pc_list,
-        foodbanks=foodbanks.to_html(classes="data"),
+        foodbanks=html_table(foodbanks),
         df=foodbanks,
     )
 
