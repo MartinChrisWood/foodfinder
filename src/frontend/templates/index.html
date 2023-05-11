@@ -32,6 +32,8 @@
                   <label for="sun">Sun &ensp;</label>
             <br>
             <br>
+            <label for="query_type"><h6>Enter location</h6></label>
+            <br>
             <script>
                 function checkPostcode(val) {
                     if ([{% for pcode in pc_list %}
@@ -42,8 +44,8 @@
                 }
             </script>
 
-            <label for="pcode">Choose a postcode:</label>
-            <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
+             <input type="radio" name="query_location" value="postcode" checked> <label for="pcode">Choose a postcode:</label>
+             <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
               onclick="checkPostcode(this.value)" onchange="checkPostcode(this.value)">
             <p id="check_mark" style="display:inline"></p>
             <script>
@@ -60,6 +62,10 @@
             </script>
 
             <br>
+            <input type="radio" name="query_location" value="coords" > <label for="coords">Coordinates:</label>
+            <input type="text" id="coords" name="coords" readonly size = "11">
+
+            <br>
             <br>
             <script>
                 function updateValue(val) {
@@ -73,16 +79,15 @@
             <input type="text" id="range_val" name="range_val" readonly size="1">km
 
             <br>
-            <input type="submit" value="SEND"/>
+            <input type="submit" value="Search"/>
         </form>
-
+        <br>
+        <br>
         <br>
         <br>
 
-        <form method="POST">
-            <label for="coords">Coordinates:</label>
-            <input type="text" id="coords" name="coords" readonly>
-        </form>
+
+
     </div>
 
 
@@ -109,13 +114,15 @@
         document.getElementById('coords').value = e.latlng.toString()
     });
 
+    {% for i in range(0, df.shape[0]) %}
+    L.marker([{{ df.loc[i, 'lat'] }}, {{ df.loc[i, 'long'] }}],
+        {icon: L.icon({iconUrl: 'http://leafletjs.com/examples/custom-icons/leaf-red.png'})}
+        ).addTo(map)
+        .bindPopup('{{ df.loc[i, 'Name'] }}');
+    {% endfor %}
+
 </script>
-    <!--
-    for (var i = 0; i < {{foodbanks}}.length; i++) {
-			L.marker([{{foodbanks}}[i][1], {{foodbanks}}[i][2]]).addTo(map)
-				.bindPopup({{foodbanks}}[i][0]);
-		}
-    -->
+
 
     {{ foodbanks|safe }}
 

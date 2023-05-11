@@ -5,15 +5,15 @@ app = Flask(__name__)
 pc_list = ["S10 2TN", "S10 2RE", "S10 2GR"]
 foodbanks = pd.DataFrame(
     [
-        ["London", 51.5072, -0.1275],
-        ["Birmingham", 52.4800, -1.9025],
-        ["Manchester", 53.4794, -2.2453],
-        ["Liverpool", 53.4075, -2.9919],
-        ["Portsmouth", 50.8058, -1.0872],
-        ["Southampton", 50.9025, -1.4042],
-        ["Nottingham", 52.9533, -1.1500],
+        ["London", 51.5072, -0.1275, "green"],
+        ["Birmingham", 52.4800, -1.9025, "green"],
+        ["Manchester", 53.4794, -2.2453, "blue"],
+        ["Liverpool", 53.4075, -2.9919, "blue"],
+        ["Portsmouth", 50.8058, -1.0872, "blue"],
+        ["Southampton", 50.9025, -1.4042, "gray"],
+        ["Nottingham", 52.9533, -1.1500, "gray"],
     ],
-    columns=["Name", "Long", "Lat"],
+    columns=["Name", "lat", "long", "color"],
 )
 
 
@@ -21,7 +21,9 @@ foodbanks = pd.DataFrame(
 # %%
 @app.route("/")
 def index():
-    return render_template("index.html", pc_list=pc_list, foodbanks=None)
+    return render_template(
+        "index.html", pc_list=pc_list, foodbanks="", df=pd.DataFrame()
+    )
 
 
 @app.route("/search", methods=["POST"])
@@ -37,7 +39,10 @@ def search():
     print(f"{query_type, days, postcode, range }")
     # return f"{query_type, days, postcode, range }"
     return render_template(
-        "index.html", pc_list=pc_list, foodbanks=foodbanks.to_html(classes="data")
+        "index.html",
+        pc_list=pc_list,
+        foodbanks=foodbanks.to_html(classes="data"),
+        df=foodbanks,
     )
 
 
