@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request
 import pandas as pd
 
-app = Flask(__name__)
-pc_list = ["S10 2TN", "S10 2RE", "S10 2GR"]
+pc_data = pd.read_csv("../../data/shef_pc_coords_lookup.csv")
+pc_list = pc_data["postcode"].to_list()
+
+
 foodbanks = pd.DataFrame(
     [
         ["London", 51.5072, -0.1275, "green"],
@@ -16,9 +18,9 @@ foodbanks = pd.DataFrame(
     columns=["Name", "lat", "long", "color"],
 )
 
+app = Flask(__name__)
 
-# %%
-# %%
+
 @app.route("/")
 def index():
     return render_template(
