@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+
+{% block title %} Sheffield foodbank finder {% endblock %}
+
+{% block search %}
+<body onload="updateValue(100)">
+        <div>
+            <form name="myForm" onsubmit="search" action="search" method="POST"
+            enctype="multipart/form-data">
+
+            <label for="query_type"><h2>Visit food bank</h2></label>
+            <br>
+            <h5>
+            <input type="radio" name="query_type" value="ASAP" checked> as soon as possible, or
+            <br>
+            <input type="radio" name="query_type" value="nearest">  on these specific days:
+            </h5>
+                  <input type="checkbox" id="mon" name="mon" checked>
+                  <label for="mon">Mon &ensp;</label>
+                  <input type="checkbox" id="tue" name="tue" checked>
+                  <label for="tue">Tue &ensp;</label>
+                  <input type="checkbox" id="wed" name="wed" checked>
+                  <label for="wed">Wed &ensp;</label>
+                  <input type="checkbox" id="thu" name="thu" checked>
+                  <label for="thu">Thu &ensp;</label>
+                  <input type="checkbox" id="fri" name="fri" checked>
+                  <label for="fri">Fri &ensp;</label>
+                  <br>
+                  <input type="checkbox" id="sat" name="sat" checked>
+                  <label for="sat">Sat &ensp;</label>
+                  <input type="checkbox" id="sun" name="sun" checked>
+                  <label for="sun">Sun &ensp;</label>
+            <br>
+            <br>
+            <label for="query_type"><h5>From location:</h5></label>
+            <br>
+            <script>
+                function checkPostcode(val) {
+                    if ([{% for pcode in pc_list %}
+                            "{{pcode}}",
+                        {% endfor %}
+                    ].includes(val)) document.getElementById("check_mark").innerHTML = '&#10004' ;
+                    else document.getElementById("check_mark").innerHTML = '&#10060' ;
+                }
+            </script>
+
+             <input type="radio" name="query_location" value="postcode" checked> <label for="pcode">Choose a postcode:</label>
+             <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
+              onclick="checkPostcode(this.value)" onchange="checkPostcode(this.value)">
+            <p id="check_mark" style="display:inline"></p>
+            <script>
+                $( function() {
+                    var availableTags = [
+                        {% for pcode in pc_list %}
+                            "{{pcode}}",
+                        {% endfor %}
+                    ];
+                    $( "#pcode" ).autocomplete({
+                    source: availableTags
+                    });
+                } );
+            </script>
+
+            <br>
+            <input type="radio" name="query_location" value="coords" >
+            <label for="coords">Map coordinates:</label>
+            <input type="text" id="coords" name="coords" readonly size = "11">
+
+            <br>
+            <br>
+            <script>
+                function updateValue(val) {
+                    document.getElementById("range_val").value = Math.round(val*val*val/1000)/10;
+                }
+            </script>
+            <label for="travel_range"><h5>Within feasible travel range:</h5></label>
+            <input type="range" min="0" max="100" value = '100' name="travel_range"
+              onchange="updateValue(this.value)"/>
+
+            <input type="text" id="range_val" name="range_val" readonly size="1">km
+            <br>
+            <br>
+            <input type="submit" value="Search"/>
+        </form>
+        <br>
+        <br>
+        <br>
+        <br>
+
+
+
+    </div>
+
+
+{% endblock %}
+
+{% block results %}
+<div id="map" style="height: 500px;"></div>
+<script>
+    var map = L.map('map').setView([53.4, -1.4], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+    }).addTo(map);
+
+    var marker;
+    map.on('click', function(e) {
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng).addTo(map);
+        $('#lat-input').val(e.latlng.lat);
+        $('#lng-input').val(e.latlng.lng);
+        document.getElementById('coords').value = e.latlng.toString()
+    });
+
+    {% for i in range(0, df.shape[0]) %}
+    L.marker([{{ df.loc[i, 'lat'] }}, {{ df.loc[i, 'long'] }}],
+        {icon: L.icon({iconUrl: 'http://leafletjs.com/examples/custom-icons/leaf-red.png'})}
+        ).addTo(map)
+        .bindPopup('{{ df.loc[i, 'Name'] }}');
+    {% endfor %}
+
+</script>
+
+
+    {{ foodbanks|safe }}
+
+</div>
+{% endblock %}
