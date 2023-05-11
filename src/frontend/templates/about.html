@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block title %} Sheffield foodbank finder - about {% endblock %}
+
+{% block search %}
+<br>
+<div>
+    <h2>Foodfinder App</h2>
+    <ul>
+        <li><a href="https://github.com/OzwaldCavendish/foodfinder">GitHub repo</a></li>
+        <li><a href="#">Heroku hosting</a></li>
+    </ul>
+</div>
+
+{% endblock %}
+
+{% block results %}
+<br>
+<div>
+    <h2>This application</h2>
+    <p> Was created on behalf of
+        <a href="https://sheffield.cityofsanctuary.org/">City of Sanctuary, Sheffield</a>
+    by volunteers from the
+        <a href="https://datasciencecampus.ons.gov.uk/">Office for National Statistics, Data Science Campus</a>.
+    </p>
+    <p>
+        While our volunteers try to keep the underlying data up-to-date, it is possible that we have missed foodbanks
+        operating in the Sheffield area, or are unaware of changes to their circumstances, proceedures or opening hours.
+        Please always contact the foodbank in advance of making referrals or travelling for help.
+    </p>
+    <p>
+        Our underlying manually maintained data can be downloaded in full from <a href={{ url_for("static", filename="foodbanks.csv") }}>here</a>.
+    </p>
+</div>
+
+{% endblock %}
