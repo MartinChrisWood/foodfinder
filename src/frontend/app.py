@@ -12,8 +12,8 @@ foodbanks = pd.DataFrame(
         ["Manchester", 53.4794, -2.2453, "blue"],
         ["Liverpool", 53.4075, -2.9919, "blue"],
         ["Portsmouth", 50.8058, -1.0872, "blue"],
-        ["Southampton", 50.9025, -1.4042, "gray"],
-        ["Nottingham", 52.9533, -1.1500, "gray"],
+        ["Southampton", 50.9025, -1.4042, "cyan"],
+        ["Nottingham", 52.9533, -1.1500, "cyan"],
     ],
     columns=["Name", "lat", "long", "color"],
 )

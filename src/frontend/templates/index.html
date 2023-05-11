@@ -11,9 +11,9 @@
             <label for="query_type"><h2>Visit food bank</h2></label>
             <br>
             <h5>
-            <input type="radio" name="query_type" value="ASAP" checked> as soon as possible, or
+            <input type="radio" name="query_type" value="ASAP"> as soon as possible, or
             <br>
-            <input type="radio" name="query_type" value="nearest">  on these specific days:
+            <input type="radio" name="query_type" value="nearest" checked>  on these specific days:
             </h5>
                   <input type="checkbox" id="mon" name="mon" checked>
                   <label for="mon">Mon &ensp;</label>
@@ -104,12 +104,18 @@
         maxZoom: 18,
     }).addTo(map);
 
+
     var marker;
     map.on('click', function(e) {
         if (marker) {
             map.removeLayer(marker);
         }
-        marker = L.marker(e.latlng).addTo(map);
+        marker = L.marker(e.latlng,
+        {icon: L.ExtraMarkers.icon({
+            icon: 'fa-number',
+            number: 0,
+            markerColor: 'pink'
+        })}).addTo(map);
         $('#lat-input').val(e.latlng.lat);
         $('#lng-input').val(e.latlng.lng);
         document.getElementById('coords').value = e.latlng.toString()
@@ -117,8 +123,11 @@
 
     {% for i in range(0, df.shape[0]) %}
     L.marker([{{ df.loc[i, 'lat'] }}, {{ df.loc[i, 'long'] }}],
-        {icon: L.icon({iconUrl: 'http://leafletjs.com/examples/custom-icons/leaf-red.png'})}
-        ).addTo(map)
+        {icon: L.ExtraMarkers.icon({
+            icon: 'fa-number',
+            number: {{i+1}},
+            markerColor: "{{ df.loc[i, 'color'] }}"
+        })}).addTo(map)
         .bindPopup('{{ df.loc[i, 'Name'] }}');
     {% endfor %}
 
