@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point
-from utils import snap_to_nearest_postcode, convert_to_geodataframe
+from utils import convert_to_geodataframe, snap_to_nearest_postcode
 
 # set the valid methods for filtering/searching and other constants
 VALID_METHODS = {"postcode", "place_from"}
@@ -28,20 +28,52 @@ def foodfind_nearest(
     },
     num_results: int = 20,
 ) -> gpd.GeoDataFrame:
-    """Find nearest food bank open on selected days.
+    """finds and filters to nearest foodbanks, by distance and days available.
 
-    Args:
-        place_from (_type_, optional): Location from which the user searches.
-            Defaults to central Sheffield = Point(53.2251,1.2813).
-        dist_range (_type_, optional): Possible restriction on distance willing
-            to travel (km). Defaults to None.
-        days (dict, optional): _description_. Defaults to {"Monday" : True,
-            'Tuesday': True, 'Wednesday': True, 'Thursday': True,
-            'Friday': True, 'Saturday': True, 'Sunday': True}.
-        num_results (int, optional): _description_. Defaults to 20.
+    Parameters
+    ----------
+    method : str
+        method to use to interprut starting location. must be one of
+        {"postcode", "place_from"}
+    postcode : str, optional
+        starting postcode, by default "S1 1AD"
+    place_from : type[Point], optional
+        starting lat/long coordinates, by default Point(-1.470599, 53.379244)
+    dist_range : float, optional
+        maximum desirable distance in meters, by default 5000
+    days : dict, optional
+        days of the week showing user availability, by default { "Monday":
+        True, "Tuesday": True, "Wednesday": True, "Thursday": True, "Friday":
+        True, "Saturday": True, "Sunday": True,}
+    num_results : int, optional
+        maximum number of results to return, by default 20
 
-    Returns:
-        Geopandas dataframe: _description_
+    Returns
+    -------
+    gpd.GeoDataFrame
+        nearest foodbanks, sorted by distances, within a users' range and day
+        request. Contains columns:
+            - 'ID' unique identifier for foodbank
+            - 'distance' (distance between start location and
+            foodbank in meters)
+            - 'name' foodbank name
+            - 'address' foodbank address
+            - 'postcode' foodank postcode
+            - 'phone' foodbank phone number
+            - 'email' foodbank email
+            - 'website' foodbank website
+            - 'opening' foodbank opening/closing times as a string
+            - 'referral_required' whether or not a referral is required to use
+            the foodbank.
+            - 'deliver_option' whether or not a delivery option is available
+            - 'lat' foodbank lattitude in CRS EPSG 4326
+            - 'long' foodbank longitude in CRS EPSG 4326
+            - 'geometry' foodbank geometry in CRS EPSG 4326
+
+    Raises
+    ------
+    ValueError
+        when invalid `method` argument is provided.
     """
 
     # capture error when incorrect method is provided
@@ -88,68 +120,97 @@ def foodfind_nearest(
 
 
 def foodfind_asap(
-    od_matrix,
-    foodbank_table,
-    post_code: str = "S1 1AA",
+    method: str,
+    postcode: str = "S1 1AA",
+    place_from: type[Point] = Point(-1.470599, 53.379244),
     dist_range: float = 5000,     # 5km
     time_stamp: datetime = datetime.now(),
     num_results: int = 20
-) -> pd.DataFrame:
-    """Find nearby food band that is open now or asap.
+) -> gpd.GeoDataFrame:
+    """finds and filters to nearest foodbanks by distance, and returns
+    them sorted by the next 'available'/open foodbank.
 
-    Args:
-        od_matrix (pandas.DataFrame): Origin-Destination matrix data
-            (commonly "foodbank_postcode_od.csv")
-        foodbank_table (pandas.DataFrame): Foodbank admin data
-            (commonly "foodbank_coords.csv")
-        post_code (string, optional): Postcode from which the user searches.
-            Defaults to "S1 1AA" (central Sheffield).
-        dist_range (Float, optional): Possible restriction on distance willing
-            to travel (km). Defaults to 5km.
-        time_stamp (datetime, optional): Current/selected time point to find
-            the first available foodbank. Defaults to datetime.now().
-        num_results (int, optional): _description_. Defaults to 20.
+    Parameters
+    ----------
+    method : str
+        method to use to interprut starting location. must be one of
+        {"postcode", "place_from"}
+    postcode : str, optional
+        starting postcode, by default "S1 1AD"
+    place_from : type[Point], optional
+        starting lat/long coordinates, by default Point(-1.470599, 53.379244)
+    dist_range : float, optional
+        maximum desirable distance in meters, by default 5000
+    time_stamp : datetime, optional
+        timestamp denoting start time to next open/available foodbank, by
+        default `datetime.now()`
+    num_results : int, optional
+        maximum number of results to return, by default 20
 
-    Returns:
-        pandas dataframe: _description_
+    Returns
+    -------
+    gpd.GeoDataFrame
+        nearest foodbanks, sorted by distances, within a users' range and day
+        request. Contains columns:
+            - 'ID' unique identifier for foodbank
+            - 'distance' (distance between start location and
+            foodbank in meters)
+            - 'name' foodbank name
+            - 'address' foodbank address
+            - 'postcode' foodank postcode
+            - 'phone' foodbank phone number
+            - 'email' foodbank email
+            - 'website' foodbank website
+            - 'opening' foodbank opening/closing times as a string
+            - 'referral_required' whether or not a referral is required to use
+            the foodbank.
+            - 'deliver_option' whether or not a delivery option is available
+            - 'lat' foodbank lattitude in CRS EPSG 4326
+            - 'long' foodbank longitude in CRS EPSG 4326
+            - 'geometry' foodbank geometry in CRS EPSG 4326
+
+    Raises
+    ------
+    ValueError
+        when invalid `method` argument is provided.
     """
 
-    foodbanks_nearby = od_matrix[(od_matrix["postcode"]==post_code) &
-                                 (od_matrix["distance"]<=dist_range)]
-    
-    foodbanks_nearby = pd.merge(foodbanks_nearby[["ID", "distance"]], foodbank_table, on="ID")
-    
+    # capture error when incorrect method is provided
+    if method not in VALID_METHODS:
+        raise ValueError(
+            f"{method} is not a valid method. Expecting one of {VALID_METHODS}"
+        )
+
+    # handle snapping a place to the nearest post code
+    if method == "place_from":
+        postcode = snap_to_nearest_postcode(place_from)["postcode"]
+
+    # read od matrix and foodbanks
+    od_matrix = pd.read_csv(OD_MATRIX_PATH)
+    foodbank_table = pd.read_csv(FOODBANKS_PATH)
+
+    foodbanks_nearby = od_matrix[(od_matrix["postcode"] == postcode) &
+                                 (od_matrix["distance"] <= dist_range)]
+
+    foodbanks_nearby = pd.merge(
+        foodbanks_nearby[["ID", "distance"]], foodbank_table, on="ID"
+    )
+
     days = []
-    
-    for x in range(1,7):
+
+    for x in range(1, 7):
         days.append((time_stamp + timedelta(days=x)).strftime("%A"))
 
-    df = foodbanks_nearby[foodbanks_nearby["opening"].str.contains(time_stamp.strftime("%A"))].sort_values("distance")
+    df = foodbanks_nearby[
+        foodbanks_nearby["opening"].str.contains(time_stamp.strftime("%A"))
+    ].sort_values("distance")
     for day in days:
-        df2 = foodbanks_nearby[foodbanks_nearby["opening"].str.contains(day)].sort_values("distance")
+        df2 = foodbanks_nearby[
+            foodbanks_nearby["opening"].str.contains(day)
+        ].sort_values("distance")
         df = pd.concat([df, df2])
 
-    return df.reset_index(drop=True).head(num_results)
+    out_df = df.reset_index(drop=True).head(num_results)
+    foodbanks_gdf = convert_to_geodataframe(out_df, crs="EPSG:4326")
 
-od_matrix = pd.read_csv("../../data/foodbank_postcode_od.csv")
-foodbank_table = pd.read_csv("../../data/foodbank_coords.csv")
-
-foodfind_asap(od_matrix, foodbank_table)
-
-if __name__ == "__main__":
-    result = foodfind_nearest(
-        method="place_from",
-        place_from=Point(-1.470599, 53.379244),
-        num_results=3,
-        dist_range=5000,
-        days={
-            "Monday": False,
-            "Tuesday": False,
-            "Wednesday": False,
-            "Thursday": True,
-            "Friday": False,
-            "Saturday": False,
-            "Sunday": False,
-        }
-    )
-    print(result[['ID', 'distance', 'name', 'opening']])
+    return foodbanks_gdf
