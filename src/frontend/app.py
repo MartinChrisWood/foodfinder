@@ -1,5 +1,9 @@
-from flask import Flask, render_template, request
+import os
+
 import pandas as pd
+
+from flask import Flask, session, render_template, request
+
 
 pc_data = pd.read_csv("../../data/shef_pc_coords_lookup.csv")
 pc_list = pc_data["postcode"].to_list()
@@ -30,7 +34,7 @@ def html_table(df):
 
 
 app = Flask(__name__)
-
+app.secret_key = os.urandom(24)
 
 @app.route("/")
 def index():
@@ -46,6 +50,8 @@ def about():
 
 @app.route("/search", methods=["POST"])
 def search():
+    if request.form:
+        session['form'] = request.form
     query_type = request.form["query_type"]
     query_location = request.form["query_location"]
     postcode = request.form["pcode"]
@@ -59,6 +65,8 @@ def search():
     }
     # foodbanks = query_backend( above parameters)
     print(request.form)
+    if session.get("form"):
+        print(session['form'])
     print(f"{query_type, query_location, postcode, coords, range, days}")
     return render_template(
         "index.html",
