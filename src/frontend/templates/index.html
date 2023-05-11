@@ -15,7 +15,7 @@
             <br>
             <input type="radio" name="query_type" value="nearest" checked>  on these specific days:
             </h5>
-                  <input type="checkbox" id="mon" name="mon" checked>
+                  <input type="checkbox" id="mon" name="mon" checked=>
                   <label for="mon">Mon &ensp;</label>
                   <input type="checkbox" id="tue" name="tue" checked>
                   <label for="tue">Tue &ensp;</label>
@@ -48,8 +48,10 @@
             </script>
 
             <input type="radio" name="query_location" value="postcode" checked> <label for="pcode">Choose a postcode:</label>
-            <input type="text" id="pcode" name="pcode" size="5" oninput="checkPostcode(this.value)"
-              onclick="checkPostcode(this.value)" onchange="checkPostcode(this.value)">
+            <input type="text" id="pcode" name="pcode" size="5" value="{{ request.form['pcode'] }}"
+                oninput="checkPostcode(this.value)"
+                onclick="checkPostcode(this.value)"
+                onchange="checkPostcode(this.value)">
             <p id="check_mark" style="display:inline"></p>
             <script>
                 $( function() {
@@ -67,7 +69,7 @@
             <br>
             <input type="radio" name="query_location" value="coords" >
             <label for="coords">Map coordinates:</label>
-            <input type="text" id="coords" name="coords" readonly size = "11">
+            <input type="text" id="coords" name="coords" readonly size = "11" value="{{ request.form['coords'] }}">
 
             <br>
             <br>
