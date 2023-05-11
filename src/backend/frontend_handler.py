@@ -61,16 +61,28 @@ def foodfind_nearest(
     # filter to near by foodbanks and sort by distance
     near_foodbanks = od_matrix[
         (od_matrix.postcode == postcode) & (od_matrix.distance <= dist_range)
-    ].drop(columns=['postcode']).sort_values('distance')
-
-    # limit number of results
-    near_foodbanks = near_foodbanks.reset_index(drop=True).iloc[0:num_results]
+    ].drop(columns=['postcode']).sort_values('distance').reset_index(drop=True)
 
     # merge on foodbank information
-    foodbanks_df = foodbanks_df.merge(near_foodbanks, on="ID", how="right")
+    foodbanks_df = near_foodbanks.merge(foodbanks_df, on="ID", how="left")
 
-    # convert to geodataframe
+    # filter further to requested days - lower casing all the strings
+    requested_days = [
+        day.lower() for day, value in days.items() if value is True
+    ]
+    foodbanks_df = foodbanks_df[
+        (
+            foodbanks_df[
+                "opening"
+            ].str.lower().str.contains("|".join(requested_days))
+        )
+        | (foodbanks_df["opening"].str.lower().str.contains("all"))
+    ]
+
+    # convert to geodataframe and limit results
     foodbanks_gdf = convert_to_geodataframe(foodbanks_df, crs="EPSG:4326")
+    foodbanks_gdf = foodbanks_gdf.reset_index(drop=True)
+    foodbanks_gdf = foodbanks_gdf.iloc[0:num_results]
 
     return foodbanks_gdf
 
@@ -102,6 +114,16 @@ if __name__ == "__main__":
     result = foodfind_nearest(
         method="place_from",
         place_from=Point(-1.470599, 53.379244),
-        num_results=10
+        num_results=3,
+        dist_range=5000,
+        days={
+            "Monday": False,
+            "Tuesday": False,
+            "Wednesday": False,
+            "Thursday": True,
+            "Friday": False,
+            "Saturday": False,
+            "Sunday": False,
+        }
     )
-    print(result)
+    print(result[['ID', 'distance', 'name', 'opening']])
