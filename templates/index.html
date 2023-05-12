@@ -104,14 +104,14 @@
         maxZoom: 18,
     }).addTo(map);
 
-    L.marker([{{ marker[0] }}, {{ marker[1] }}],
+    var marker;
+    marker  = L.marker([{{ marker[0] }}, {{ marker[1] }}],
         {icon: L.ExtraMarkers.icon({
             icon: 'fa-number',
             number: 0,
             markerColor: 'pink'
         })}).addTo(map);
 
-    var marker;
     map.on('click', function(e) {
         if (marker) {
             map.removeLayer(marker);
@@ -135,7 +135,7 @@
             number: {{i+1}},
             markerColor: "{{ df.loc[i, 'color'] }}"
         })}).addTo(map)
-        .bindPopup('{{ df.loc[i, 'Name'] }}');
+        .bindPopup('{{ df.loc[i, 'name'] }}');
     {% endfor %}
 
 </script>
