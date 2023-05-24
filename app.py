@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import numpy as np
 import pandas as pd
 from src.backend.frontend_handler import foodfind_asap, foodfind_nearest
 from datetime import datetime, timedelta
@@ -14,23 +15,30 @@ pc_list = pc_data["postcode"].to_list()
 def html_table(df):
     df_out = df.assign(rank=range(len(df)))
     df_out["rank"] = df_out["rank"] + 1
+    df_out['email'] = '<a href="mailto:' + df_out['email'] + '">' + df_out['email'] + '</a>'
+    df_out['website'] = "https://" + df_out['website']
+    df_out['referral_required'] = np.where(df['referral_required'], "Yes", "")
+    df_out['delivery_option'] = np.where(df['delivery_option'], "Yes", "")
     df_html = df_out.rename(
-        columns={"referral_required": "referral", "delivery_option": "delivery"}
+        columns={"referral_required": "referral", "delivery_option": "delivery", "rank": "number"}
     )[
         [
-            "rank",
+            "number",
             "name",
             "address",
             "postcode",
             "opening",
-            "referral",
-            "delivery",
             "phone",
             "email",
             "website",
+            "referral",
+            "delivery"
         ]
     ].to_html(
-        classes="table table-striped table-bordered table-sm table-hover", index=False
+        classes="table table-striped table-bordered table-sm table-hover",
+        index=False,
+        escape=False,
+        render_links=True
     )
     return df_html
 
