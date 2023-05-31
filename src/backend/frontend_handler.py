@@ -11,6 +11,10 @@ VALID_METHODS = {"postcode", "place_from"}
 OD_MATRIX_PATH = "data/foodbank_postcode_od.csv"
 FOODBANKS_PATH = "data/foodbank_coords.csv"
 
+# read od matrix and foodbanks
+OD_MATRIX = pd.read_csv(OD_MATRIX_PATH)
+FOODBANKS = pd.read_csv(FOODBANKS_PATH)
+
 
 def foodfind_nearest(
     method: str,
@@ -88,16 +92,16 @@ def foodfind_nearest(
         postcode = snap_to_nearest_postcode(place_from)["postcode"]
 
     # read od matrix and foodbanks
-    od_matrix = pd.read_csv(OD_MATRIX_PATH)
-    foodbanks_df = pd.read_csv(FOODBANKS_PATH)
+    # od_matrix = pd.read_csv(OD_MATRIX_PATH)
+    # foodbanks_df = pd.read_csv(FOODBANKS_PATH)
 
     # filter to near by foodbanks and sort by distance
-    near_foodbanks = od_matrix[
-        (od_matrix.postcode == postcode) & (od_matrix.distance <= dist_range)
+    near_foodbanks = OD_MATRIX[
+        (OD_MATRIX.postcode == postcode) & (OD_MATRIX.distance <= dist_range)
     ].drop(columns=['postcode']).sort_values('distance').reset_index(drop=True)
 
     # merge on foodbank information
-    foodbanks_df = near_foodbanks.merge(foodbanks_df, on="ID", how="left")
+    foodbanks_df = near_foodbanks.merge(FOODBANKS, on="ID", how="left")
 
     # filter further to requested days - lower casing all the strings
     requested_days = [
@@ -188,14 +192,14 @@ def foodfind_asap(
         postcode = snap_to_nearest_postcode(place_from)["postcode"]
 
     # read od matrix and foodbanks
-    od_matrix = pd.read_csv(OD_MATRIX_PATH)
-    foodbank_table = pd.read_csv(FOODBANKS_PATH)
+    # od_matrix = pd.read_csv(OD_MATRIX_PATH)
+    # foodbank_table = pd.read_csv(FOODBANKS_PATH)
 
-    foodbanks_nearby = od_matrix[(od_matrix["postcode"] == postcode) &
-                                 (od_matrix["distance"] <= dist_range)]
+    foodbanks_nearby = OD_MATRIX[(OD_MATRIX["postcode"] == postcode) &
+                                 (OD_MATRIX["distance"] <= dist_range)]
 
     foodbanks_nearby = pd.merge(
-        foodbanks_nearby[["ID", "distance"]], foodbank_table, on="ID"
+        foodbanks_nearby[["ID", "distance"]], FOODBANKS, on="ID"
     )
 
     days = []
