@@ -28,7 +28,7 @@ def postcode_to_coords(DATA_DIR):
                         else:
                             print(f"{info.filename} already exists")
 
-            os.remove(f"{filepath}")
+            # os.remove(f"{filepath}")
 
         r.close()
 
