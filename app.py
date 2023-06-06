@@ -62,11 +62,22 @@ def get_coords_from_postcode(postcode):
     if postcode in PC_LIST:
         ind = PC_LIST.index(postcode)
         return [PC_DATA.lat[ind], PC_DATA.long[ind]]
-
     # If postcode not viable, return None
     else:
         return None
 
+
+def get_coords_from_coords(coord_string):
+    """ Helper, getting coordinates out of a coordinate string. """
+    coords = re.search(
+                r"LatLng\(([0-9\.-]+), ([0-9§.-]+)\)", coord_string  # noqa:W605
+            )    
+    if coords:
+        gr = coords.groups()
+        return [float(gr[0]), float(gr[1])]
+    # If coordinate string not viable, return None
+    else:
+        return None
 
 
 app = Flask(__name__)
@@ -90,35 +101,23 @@ def index():
     if request.method == "POST":
         query_type = request.form["query_type"]
         query_location = request.form["query_location"]
-        map_centre = MAP_CENTRE
         map_zoom = MAP_ZOOM
-        marker = [0, 0]
+
         if query_location == "postcode":
             postcode = request.form["pcode"]
-            if postcode in PC_LIST:
-                ind = PC_LIST.index(postcode)
-                marker = [PC_DATA.lat[ind], PC_DATA.long[ind]]
-                map_centre = marker
-                map_zoom = MAP_ZOOM + 2
-            else:
-                # Handle case; something wrong with postcode
-                return redirect(url_for("index"))
-            
-        else:
-            coords = re.search(
-                r"LatLng\(([0-9\.-]+), ([0-9§.-]+)\)", request.form["coords"]  # noqa:W605
-            )
-            if coords:
-                gr = coords.groups()
-                coords = Point(float(gr[1]), float(gr[0]))
-                marker = [float(gr[0]), float(gr[1])]
-                map_centre = marker
-                map_zoom = MAP_ZOOM + 2
-            else:
-                # Handle case; something wrong with coordinates
-                return redirect(url_for("index"))
+            map_zoom = MAP_ZOOM + 2
+            marker = get_coords_from_postcode(request.form["pcode"])
+        
+        elif query_location == "coords":
+            map_zoom = MAP_ZOOM + 2
+            marker = get_coords_from_coords(request.form["coords"])
 
-        # TODO check valid location input and display error?
+        else:
+            pass # For now, opportunity for better work here in future
+        
+        # Handle case, something wrong with location
+        if not marker:
+            return redirect(url_for("index"))
 
         range = float(request.form["range_val"])
         days = {
@@ -143,7 +142,7 @@ def index():
             else:
                 foodbanks = foodfind_nearest(
                     method="place_from",
-                    place_from=coords,
+                    place_from=Point(marker[1], marker[0]),
                     dist_range=range * 1000,
                     days=days,
                 )
@@ -154,7 +153,7 @@ def index():
                 )
             else:
                 foodbanks = foodfind_asap(
-                    method="place_from", place_from=coords, dist_range=range * 1000
+                    method="place_from", place_from=Point(marker[1], marker[0]), dist_range=range * 1000
                 )
 
         foodbanks["color"] = "cyan"  # based on days to opening
@@ -169,7 +168,6 @@ def index():
             pc_list=PC_LIST,
             foodbanks=html_table(foodbanks),
             df=foodbanks,
-            map_centre=map_centre,
             map_zoom=map_zoom,
             marker=marker,
         )        
