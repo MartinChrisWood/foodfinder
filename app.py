@@ -1,83 +1,18 @@
-from flask import Flask, render_template, request, redirect, url_for
-import numpy as np
+import re
+
 import pandas as pd
-from src.backend.frontend_handler import foodfind_asap, foodfind_nearest
+
 from datetime import datetime, timedelta
 from shapely.geometry import Point
-import re
+from flask import Flask, render_template, request, redirect, url_for
+
+from src.backend.frontend_handler import foodfind_asap, foodfind_nearest
+from src.coordinates import get_coords_from_coords, get_coords_from_postcode, PC_LIST
+from src.display import html_table
+
 
 MAP_CENTRE = [53.4, -1.4]
 MAP_ZOOM = 11
-PC_DATA = pd.read_csv("data/shef_pc_coords_lookup.csv")
-PC_LIST = PC_DATA["postcode"].to_list()
-
-
-def html_table(df):
-    # Ranks, indexed from 1 for readability
-    df_out = df.assign(rank=range(len(df)))
-    df_out["rank"] = df_out["rank"] + 1
-
-    # Handles missing contact details
-    df_out = df_out.fillna("")
-
-    # Reformat the contact links into one field, for compact display
-    df_out['email'] = "Email: " + '<a href="mailto:' + df_out['email'] + '">' + df_out['email'] + '</a>'
-    df_out['website'] = "Website: " + '<a href="' + "https://" +  df_out['website'] + '">' + df_out['website'] + "</a>"
-    df_out['contact'] = df_out.apply(lambda row: "<br>".join([row['website'], row['email'], row['phone']]), axis=1)
-
-    # Reformat address and postcode into one field, for compact display
-    df_out['address'] = df_out['address'] + "<br>" + "<b>" + df_out['postcode'] + "</b>"
-
-    # Mark metadata clearly
-    df_out['referral_required'] = np.where(df['referral_required'], "Yes", "")
-    df_out['delivery_option'] = np.where(df['delivery_option'], "Yes", "")
-    
-    # Format table column heads for readability
-    df_out = df_out.rename(
-        columns={"referral_required": "referral", "delivery_option": "delivery", "rank": "number"}
-    )[
-        [
-            "number",
-            "name",
-            "address",
-            "opening",
-            "contact",
-            "referral",
-            "delivery"
-        ]
-    ]
-    df_out.columns = [col.capitalize() for col in df_out.columns]
-    df_out.to_csv("test.csv")
-
-    return df_out.to_html(
-        classes="table table-striped table-bordered table-sm table-hover",
-        index=False,
-        escape=False,
-        render_links=True
-    )
-
-
-def get_coords_from_postcode(postcode):
-    """ Helper, getting coordinate pair from postcode. """
-    if postcode in PC_LIST:
-        ind = PC_LIST.index(postcode)
-        return [PC_DATA.lat[ind], PC_DATA.long[ind]]
-    # If postcode not viable, return None
-    else:
-        return None
-
-
-def get_coords_from_coords(coord_string):
-    """ Helper, getting coordinates out of a coordinate string. """
-    coords = re.search(
-                r"LatLng\(([0-9\.-]+), ([0-9§.-]+)\)", coord_string  # noqa:W605
-            )    
-    if coords:
-        gr = coords.groups()
-        return [float(gr[0]), float(gr[1])]
-    # If coordinate string not viable, return None
-    else:
-        return None
 
 
 app = Flask(__name__)
@@ -92,7 +27,6 @@ def index():
             pc_list=PC_LIST,
             foodbanks="",
             df=pd.DataFrame(),
-            map_centre=MAP_CENTRE,
             map_zoom=MAP_ZOOM,
             marker=MAP_CENTRE,
         )
