@@ -66,7 +66,6 @@ def index():
                 "Sunday",
             ]
         }
-        print(days)
         # query_backend( above parameters)
         if query_type == "nearest":
             if query_location == "postcode":
