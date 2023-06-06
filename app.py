@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import numpy as np
 import pandas as pd
 from src.backend.frontend_handler import foodfind_asap, foodfind_nearest
@@ -8,8 +8,8 @@ import re
 
 MAP_CENTRE = [53.4, -1.4]
 MAP_ZOOM = 11
-pc_data = pd.read_csv("data/shef_pc_coords_lookup.csv")
-pc_list = pc_data["postcode"].to_list()
+PC_DATA = pd.read_csv("data/shef_pc_coords_lookup.csv")
+PC_LIST = PC_DATA["postcode"].to_list()
 
 
 def html_table(df):
@@ -25,6 +25,9 @@ def html_table(df):
     df_out['website'] = "Website: " + '<a href="' + "https://" +  df_out['website'] + '">' + df_out['website'] + "</a>"
     df_out['contact'] = df_out.apply(lambda row: "<br>".join([row['website'], row['email'], row['phone']]), axis=1)
 
+    # Reformat address and postcode into one field, for compact display
+    df_out['address'] = df_out['address'] + "<br>" + "<b>" + df_out['postcode'] + "</b>"
+
     # Mark metadata clearly
     df_out['referral_required'] = np.where(df['referral_required'], "Yes", "")
     df_out['delivery_option'] = np.where(df['delivery_option'], "Yes", "")
@@ -37,10 +40,7 @@ def html_table(df):
             "number",
             "name",
             "address",
-            "postcode",
             "opening",
-            "website",
-            "email",
             "contact",
             "referral",
             "delivery"
@@ -57,6 +57,18 @@ def html_table(df):
     )
 
 
+def get_coords_from_postcode(postcode):
+    """ Helper, getting coordinate pair from postcode. """
+    if postcode in PC_LIST:
+        ind = PC_LIST.index(postcode)
+        return [PC_DATA.lat[ind], PC_DATA.long[ind]]
+
+    # If postcode not viable, return None
+    else:
+        return None
+
+
+
 app = Flask(__name__)
 
 
@@ -66,14 +78,15 @@ def index():
     if request.method == "GET":
         return render_template(
             "index.html",
-            pc_list=pc_list,
+            pc_list=PC_LIST,
             foodbanks="",
             df=pd.DataFrame(),
             map_centre=MAP_CENTRE,
             map_zoom=MAP_ZOOM,
-            marker=[0, 0],
+            marker=MAP_CENTRE,
         )
     
+    # Handle case, search posted
     if request.method == "POST":
         query_type = request.form["query_type"]
         query_location = request.form["query_location"]
@@ -82,12 +95,15 @@ def index():
         marker = [0, 0]
         if query_location == "postcode":
             postcode = request.form["pcode"]
-            if postcode in pc_list:
-                ind = pc_list.index(postcode)
-                marker = [pc_data.lat[ind], pc_data.long[ind]]
+            if postcode in PC_LIST:
+                ind = PC_LIST.index(postcode)
+                marker = [PC_DATA.lat[ind], PC_DATA.long[ind]]
                 map_centre = marker
                 map_zoom = MAP_ZOOM + 2
-
+            else:
+                # Handle case; something wrong with postcode
+                return redirect(url_for("index"))
+            
         else:
             coords = re.search(
                 r"LatLng\(([0-9\.-]+), ([0-9§.-]+)\)", request.form["coords"]  # noqa:W605
@@ -99,7 +115,8 @@ def index():
                 map_centre = marker
                 map_zoom = MAP_ZOOM + 2
             else:
-                coords = Point(0, 0)
+                # Handle case; something wrong with coordinates
+                return redirect(url_for("index"))
 
         # TODO check valid location input and display error?
 
@@ -149,7 +166,7 @@ def index():
 
         return render_template(
             "index.html",
-            pc_list=pc_list,
+            pc_list=PC_LIST,
             foodbanks=html_table(foodbanks),
             df=foodbanks,
             map_centre=map_centre,
