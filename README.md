@@ -28,3 +28,15 @@ Preferred unittesting framework is PyTest:
 ```shell
 pytest
 ```
+
+### Auto-assigning coordinates to postcodes and foodbanks
+
+```shell
+python src/backend/scripts/make_data.py
+```
+
+### Building a foodbank-postcode Origin-Destination (OD) matrix
+
+```shell
+python src/backend/scripts/build_od.py
+```
