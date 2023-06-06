@@ -9,7 +9,12 @@ __pycache__/
 # Data
 *.csv
 *.txt
-!foodbanks.csv
+*.zip
+!data/foodbanks.csv
+!data/foodbank_coords.csv
+!data/foodbank_postcode_od.csv
+!data/shef_pc_coords_lookup.csv
+
 
 # Distribution / packaging
 .Python
@@ -43,8 +48,6 @@ pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 # Project-specific
-*.csv
-
 htmlcov/
 .tox/
 .nox/
