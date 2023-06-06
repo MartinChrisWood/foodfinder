@@ -8,7 +8,8 @@
             <form name="myForm" onsubmit="{{ url_for('index') }}" action="/" method="POST"
             enctype="multipart/form-data">
 
-            <label for="query_type"><h2>Visit food bank</h2></label>
+            <label for="query_type"><h2>Find a foodbank</h2></label>
+            <br>
             <br>
             <h5>
             <input type="radio" name="query_type" value="ASAP"> as soon as possible, or
@@ -79,7 +80,7 @@
                     document.getElementById("range_val").value = val;
                 }
             </script>
-            <label for="travel_range"><h5>Within feasible travel range:</h5></label>
+            <label for="travel_range"><h5>Within travel range:</h5></label>
             <br>
             <input type="range" min="1" max="30" value = '30' name="travel_range"
               onchange="updateValue(this.value)"/>

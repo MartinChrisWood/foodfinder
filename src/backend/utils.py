@@ -2,9 +2,6 @@ import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point
 
-# path to postcode lookup file
-PC_LOOKUP = "data/shef_pc_coords_lookup.csv"
-
 
 def convert_to_geodataframe(
     df: pd.DataFrame,
@@ -37,6 +34,11 @@ def convert_to_geodataframe(
     )
 
 
+# read in post code lookup, create a geodataframe and convert CRS
+PC_LOOKUP = pd.read_csv("data/shef_pc_coords_lookup.csv", usecols=["postcode", "lat", "long"])
+PC_LOOKUP = convert_to_geodataframe(PC_LOOKUP).to_crs("EPSG:27700")
+
+
 def snap_to_nearest_postcode(
     point: type[Point] = Point(-1.470599, 53.379244)
 ) -> dict:
@@ -63,17 +65,13 @@ def snap_to_nearest_postcode(
     this site offers an API. Could wrap this in as a furture TODO.
     """
 
-    # read in post code lookup, create a geodataframe and convert CRS
-    pc_lookup = pd.read_csv(PC_LOOKUP, usecols=["postcode", "lat", "long"])
-    pc_lookup = convert_to_geodataframe(pc_lookup)
-    pc_lookup = pc_lookup.to_crs("EPSG:27700")
-
     # convert point to geoseries
     point = gpd.GeoSeries(
-        [point]*len(pc_lookup), crs="EPSG:4326"
+        [point]*len(PC_LOOKUP), crs="EPSG:4326"
     ).to_crs("EPSG:27700")
 
     # calculate distance to all postcodes
+    pc_lookup = PC_LOOKUP.copy()
     pc_lookup['dist'] = pc_lookup.distance(point)
 
     # get closest as row within minimum distance and convert to a dict
