@@ -30,7 +30,7 @@ def foodfind_nearest(
         "Saturday": True,
         "Sunday": True,
     },
-    num_results: int = 20,
+    num_results: int = 15,
 ) -> gpd.GeoDataFrame:
     """finds and filters to nearest foodbanks, by distance and days available.
 
@@ -126,7 +126,7 @@ def foodfind_asap(
     place_from: type[Point] = Point(-1.470599, 53.379244),
     dist_range: float = 5000,     # 5km
     time_stamp: datetime = datetime.now(),
-    num_results: int = 20
+    num_results: int = 15
 ) -> gpd.GeoDataFrame:
     """finds and filters to nearest foodbanks by distance, and returns
     them sorted by the next 'available'/open foodbank.

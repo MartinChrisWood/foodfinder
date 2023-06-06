@@ -4,7 +4,7 @@
 
 {% block search %}
 <body onload="updateValue(30)">
-        <div>
+        <div style="padding:10px">
             <form name="myForm" onsubmit="{{ url_for('index') }}" action="/" method="POST"
             enctype="multipart/form-data">
 
@@ -23,9 +23,9 @@
                   <label for="wed">Wed &ensp;</label>
                   <input type="checkbox" id="thu" name="Thursday" checked>
                   <label for="thu">Thu &ensp;</label>
+                  <br>
                   <input type="checkbox" id="fri" name="Friday" checked>
                   <label for="fri">Fri &ensp;</label>
-                  <br>
                   <input type="checkbox" id="sat" name="Saturday" checked>
                   <label for="sat">Sat &ensp;</label>
                   <input type="checkbox" id="sun" name="Sunday" checked>
@@ -80,6 +80,7 @@
                 }
             </script>
             <label for="travel_range"><h5>Within feasible travel range:</h5></label>
+            <br>
             <input type="range" min="1" max="30" value = '30' name="travel_range"
               onchange="updateValue(this.value)"/>
 
@@ -98,7 +99,8 @@
 
 
 {% block results %}
-<div id="map" style="height: 500px;"></div>
+<div id="map" style="height: 500px; padding:10px"></div>
+<br>
 <script>
     var map = L.map('map').setView([{{marker[0]}}, {{marker[1]}}], {{map_zoom}});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

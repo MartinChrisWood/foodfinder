@@ -9,6 +9,10 @@ def html_table(df):
 
     # Handles missing contact details
     df_out = df_out.fillna("")
+    
+    # Replace newline characters with html break
+    df_out['opening'] = df_out['opening'].str.replace("\r", "")
+    df_out['opening'] = df_out['opening'].str.replace("\n", "<br>")
 
     # Reformat the contact links into one field, for compact display
     df_out['email'] = "Email: " + '<a href="mailto:' + df_out['email'] + '">' + df_out['email'] + '</a>'

@@ -1,0 +1,44 @@
+th, td {
+    text-align: left;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0px;
+}
+
+tr:hover {background-color: #c4e6c9;}
+
+/* Style the active class (and buttons on mouse-over) */
+.active {
+    background-color: #c2d4c1;
+    color: white;
+    
+  }
+
+.content {
+    float: left;
+    width: 50%;
+    padding: 20px;
+    min-width: 400px;
+}
+
+.buffer {
+    clear: both;
+    height: 100px;
+}
+
+.footerlink {
+    color: white;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 3px;
+    background-color: rgb(40, 122, 58);
+    color: white;
+  }
