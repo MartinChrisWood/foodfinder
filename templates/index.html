@@ -5,7 +5,7 @@
 {% block search %}
 <body onload="updateValue(30)">
         <div>
-            <form name="myForm" onsubmit="search" action="search" method="POST"
+            <form name="myForm" onsubmit="{{ url_for('index') }}" action="/" method="POST"
             enctype="multipart/form-data">
 
             <label for="query_type"><h2>Visit food bank</h2></label>
@@ -68,8 +68,8 @@
 
             <br>
             <input type="radio" name="query_location" value="coords" >
-            <label for="coords">Map coordinates:</label>
-            <input type="text" id="coords" name="coords" readonly size = "11" value="{{ request.form['coords'] }}">
+            <label for="coords">Map coordinates (click then search):</label>
+            <input type="text" id="coords" name="coords" readonly size = "11" value="{{ request.form['coords'] }}" hidden>
 
             <br>
             <br>

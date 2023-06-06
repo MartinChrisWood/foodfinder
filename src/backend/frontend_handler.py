@@ -91,10 +91,6 @@ def foodfind_nearest(
     if method == "place_from":
         postcode = snap_to_nearest_postcode(place_from)["postcode"]
 
-    # read od matrix and foodbanks
-    # od_matrix = pd.read_csv(OD_MATRIX_PATH)
-    # foodbanks_df = pd.read_csv(FOODBANKS_PATH)
-
     # filter to near by foodbanks and sort by distance
     near_foodbanks = OD_MATRIX[
         (OD_MATRIX.postcode == postcode) & (OD_MATRIX.distance <= dist_range)
@@ -190,10 +186,6 @@ def foodfind_asap(
     # handle snapping a place to the nearest post code
     if method == "place_from":
         postcode = snap_to_nearest_postcode(place_from)["postcode"]
-
-    # read od matrix and foodbanks
-    # od_matrix = pd.read_csv(OD_MATRIX_PATH)
-    # foodbank_table = pd.read_csv(FOODBANKS_PATH)
 
     foodbanks_nearby = OD_MATRIX[(OD_MATRIX["postcode"] == postcode) &
                                  (OD_MATRIX["distance"] <= dist_range)]
