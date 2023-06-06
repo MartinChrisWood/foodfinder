@@ -4,11 +4,12 @@
 
 {% block search %}
 <body onload="updateValue(30)">
-        <div>
-            <form name="myForm" onsubmit="search" action="search" method="POST"
+        <div style="padding:10px">
+            <form name="myForm" onsubmit="{{ url_for('index') }}" action="/" method="POST"
             enctype="multipart/form-data">
 
-            <label for="query_type"><h2>Visit food bank</h2></label>
+            <label for="query_type"><h2>Find a foodbank</h2></label>
+            <br>
             <br>
             <h5>
             <input type="radio" name="query_type" value="ASAP"> as soon as possible, or
@@ -23,9 +24,9 @@
                   <label for="wed">Wed &ensp;</label>
                   <input type="checkbox" id="thu" name="Thursday" checked>
                   <label for="thu">Thu &ensp;</label>
+                  <br>
                   <input type="checkbox" id="fri" name="Friday" checked>
                   <label for="fri">Fri &ensp;</label>
-                  <br>
                   <input type="checkbox" id="sat" name="Saturday" checked>
                   <label for="sat">Sat &ensp;</label>
                   <input type="checkbox" id="sun" name="Sunday" checked>
@@ -68,8 +69,8 @@
 
             <br>
             <input type="radio" name="query_location" value="coords" >
-            <label for="coords">Map coordinates:</label>
-            <input type="text" id="coords" name="coords" readonly size = "11" value="{{ request.form['coords'] }}">
+            <label for="coords">Map coordinates (click then search):</label>
+            <input type="text" id="coords" name="coords" readonly size = "11" value="{{ request.form['coords'] }}" hidden>
 
             <br>
             <br>
@@ -79,7 +80,8 @@
                     document.getElementById("range_val").value = val;
                 }
             </script>
-            <label for="travel_range"><h5>Within feasible travel range:</h5></label>
+            <label for="travel_range"><h5>Within travel range:</h5></label>
+            <br>
             <input type="range" min="1" max="30" value = '30' name="travel_range"
               onchange="updateValue(this.value)"/>
 
@@ -98,9 +100,10 @@
 
 
 {% block results %}
-<div id="map" style="height: 500px;"></div>
+<div id="map" style="height: 500px; padding:10px"></div>
+<br>
 <script>
-    var map = L.map('map').setView([{{map_centre[0]}}, {{map_centre[1]}}], {{map_zoom}});
+    var map = L.map('map').setView([{{marker[0]}}, {{marker[1]}}], {{map_zoom}});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
             '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',

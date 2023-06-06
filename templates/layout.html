@@ -8,6 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
     <title>{% block title %} {% endblock %}</title>
       <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -34,19 +35,31 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href= {{ url_for("about") }}>About</a>
-            </li>
+              <li class="nav-item">
+                  <a class="nav-link" href= {{ url_for("about") }}>About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href= {{ url_for("contact") }}>Contact</a>
+              </li>
             </ul>
         </div>
     </nav>
     <div class="container">
-      <div id="input" style="width: 30%; float:left">
+      <div id="input" style="width: 25%; float:left; min-width:300px">
         {% block search %} {% endblock %}
       </div>
-      <div id="output" style="width: 70%; float:left">
+      <div id="output" style="float:center; min-width: 400px">
           {% block results %} {% endblock %}
       </div>
     </div>
- </body>
+    <div class="buffer">
+      <footer>
+          <address>
+              <p><b>City of Sanctuary Sheffield</b>, The Sanctuary, 37-39 Chapel Walk, Sheffield, S1 2PD</p>
+              <p><a class="footerlink" href="mailto:admin@sheffield.cityofsanctuary.org">admin@sheffield.cityofsanctuary.org</a>, <a class="footerlink" href="tel:+441142211845">0114 221 1845</a></p>
+          </address>
+      </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/activator.js') }}"></script>
+  </body>
 </html>

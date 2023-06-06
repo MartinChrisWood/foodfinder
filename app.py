@@ -1,62 +1,110 @@
-from flask import Flask, render_template, request
-import numpy as np
+import re
+
 import pandas as pd
-from src.backend.frontend_handler import foodfind_asap, foodfind_nearest
+
 from datetime import datetime, timedelta
 from shapely.geometry import Point
-import re
+from flask import Flask, render_template, request, redirect, url_for
+
+from src.backend.frontend_handler import foodfind_asap, foodfind_nearest
+from src.coordinates import get_coords_from_coords, get_coords_from_postcode, PC_LIST
+from src.display import html_table
+
 
 MAP_CENTRE = [53.4, -1.4]
 MAP_ZOOM = 11
-pc_data = pd.read_csv("data/shef_pc_coords_lookup.csv")
-pc_list = pc_data["postcode"].to_list()
-
-
-def html_table(df):
-    df_out = df.assign(rank=range(len(df)))
-    df_out["rank"] = df_out["rank"] + 1
-    df_out['email'] = '<a href="mailto:' + df_out['email'] + '">' + df_out['email'] + '</a>'
-    df_out['website'] = "https://" + df_out['website']
-    df_out['referral_required'] = np.where(df['referral_required'], "Yes", "")
-    df_out['delivery_option'] = np.where(df['delivery_option'], "Yes", "")
-    df_html = df_out.rename(
-        columns={"referral_required": "referral", "delivery_option": "delivery", "rank": "number"}
-    )[
-        [
-            "number",
-            "name",
-            "address",
-            "postcode",
-            "opening",
-            "phone",
-            "email",
-            "website",
-            "referral",
-            "delivery"
-        ]
-    ].to_html(
-        classes="table table-striped table-bordered table-sm table-hover",
-        index=False,
-        escape=False,
-        render_links=True
-    )
-    return df_html
 
 
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    return render_template(
-        "index.html",
-        pc_list=pc_list,
-        foodbanks="",
-        df=pd.DataFrame(),
-        map_centre=MAP_CENTRE,
-        map_zoom=MAP_ZOOM,
-        marker=[0, 0],
-    )
+    # Handle case, no search
+    if request.method == "GET":
+        return render_template(
+            "index.html",
+            pc_list=PC_LIST,
+            foodbanks="",
+            df=pd.DataFrame(),
+            map_zoom=MAP_ZOOM,
+            marker=MAP_CENTRE,
+        )
+    
+    # Handle case, search posted
+    if request.method == "POST":
+        query_type = request.form["query_type"]
+        query_location = request.form["query_location"]
+        map_zoom = MAP_ZOOM
+
+        if query_location == "postcode":
+            postcode = request.form["pcode"]
+            map_zoom = MAP_ZOOM + 2
+            marker = get_coords_from_postcode(request.form["pcode"])
+        
+        elif query_location == "coords":
+            map_zoom = MAP_ZOOM + 2
+            marker = get_coords_from_coords(request.form["coords"])
+
+        else:
+            pass # For now, opportunity for better work here in future
+        
+        # Handle case, something wrong with location
+        if not marker:
+            return redirect(url_for("index"))
+
+        range = float(request.form["range_val"])
+        days = {
+            x: (True if x in request.form.keys() else False)
+            for x in [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+            ]
+        }
+        print(days)
+        # query_backend( above parameters)
+        if query_type == "nearest":
+            if query_location == "postcode":
+                foodbanks = foodfind_nearest(
+                    method="postcode", postcode=postcode, dist_range=range * 1000, days=days
+                )
+            else:
+                foodbanks = foodfind_nearest(
+                    method="place_from",
+                    place_from=Point(marker[1], marker[0]),
+                    dist_range=range * 1000,
+                    days=days,
+                )
+        else:
+            if query_location == "postcode":
+                foodbanks = foodfind_asap(
+                    method="postcode", postcode=postcode, dist_range=range * 1000
+                )
+            else:
+                foodbanks = foodfind_asap(
+                    method="place_from", place_from=Point(marker[1], marker[0]), dist_range=range * 1000
+                )
+
+        foodbanks["color"] = "cyan"  # based on days to opening
+        msk_today = foodbanks.opening.str.contains(datetime.now().strftime("%A"))
+        msk_tomorrow = foodbanks.opening.str.contains(
+            (datetime.now() + timedelta(days=1)).strftime("%A")
+        )
+        foodbanks.loc[msk_today | msk_tomorrow, "color"] = "blue"
+
+        return render_template(
+            "index.html",
+            pc_list=PC_LIST,
+            foodbanks=html_table(foodbanks),
+            df=foodbanks,
+            map_zoom=map_zoom,
+            marker=marker,
+        )        
 
 
 @app.route("/about")
@@ -64,89 +112,9 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/search", methods=["POST"])
-def search():
-    query_type = request.form["query_type"]
-    query_location = request.form["query_location"]
-    map_centre = MAP_CENTRE
-    map_zoom = MAP_ZOOM
-    marker = [0, 0]
-    if query_location == "postcode":
-        postcode = request.form["pcode"]
-        if postcode in pc_list:
-            ind = pc_list.index(postcode)
-            marker = [pc_data.lat[ind], pc_data.long[ind]]
-            map_centre = marker
-            map_zoom = MAP_ZOOM + 2
-
-    else:
-        coords = re.search(
-            r"LatLng\(([0-9\.-]+), ([0-9§.-]+)\)", request.form["coords"]  # noqa:W605
-        )
-        if coords:
-            gr = coords.groups()
-            coords = Point(float(gr[1]), float(gr[0]))
-            marker = [float(gr[0]), float(gr[1])]
-            map_centre = marker
-            map_zoom = MAP_ZOOM + 2
-        else:
-            coords = Point(0, 0)
-
-    # TODO check valid location input and display error?
-
-    range = float(request.form["range_val"])
-    days = {
-        x: (True if x in request.form.keys() else False)
-        for x in [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-        ]
-    }
-    print(days)
-    # query_backend( above parameters)
-    if query_type == "nearest":
-        if query_location == "postcode":
-            foodbanks = foodfind_nearest(
-                method="postcode", postcode=postcode, dist_range=range * 1000, days=days
-            )
-        else:
-            foodbanks = foodfind_nearest(
-                method="place_from",
-                place_from=coords,
-                dist_range=range * 1000,
-                days=days,
-            )
-    else:
-        if query_location == "postcode":
-            foodbanks = foodfind_asap(
-                method="postcode", postcode=postcode, dist_range=range * 1000
-            )
-        else:
-            foodbanks = foodfind_asap(
-                method="place_from", place_from=coords, dist_range=range * 1000
-            )
-
-    foodbanks["color"] = "cyan"  # based on days to opening
-    msk_today = foodbanks.opening.str.contains(datetime.now().strftime("%A"))
-    msk_tomorrow = foodbanks.opening.str.contains(
-        (datetime.now() + timedelta(days=1)).strftime("%A")
-    )
-    foodbanks.loc[msk_today | msk_tomorrow, "color"] = "blue"
-
-    return render_template(
-        "index.html",
-        pc_list=pc_list,
-        foodbanks=html_table(foodbanks),
-        df=foodbanks,
-        map_centre=map_centre,
-        map_zoom=map_zoom,
-        marker=marker,
-    )
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
 
 
 if __name__ == "__main__":
