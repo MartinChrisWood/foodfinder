@@ -1,4 +1,4 @@
-import re
+import os
 
 import pandas as pd
 
@@ -16,6 +16,7 @@ MAP_ZOOM = 11
 
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY")
 
 
 @app.route("/", methods=["GET", "POST"])
