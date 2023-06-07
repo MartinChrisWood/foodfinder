@@ -1,13 +1,41 @@
 """ Utility script to generate a postcode/foodbank OD matrix """
 
-
 import os
 import toml
 import numpy as np
 import pandas as pd
 import geopandas as gpd
 
-from src.backend.utils import convert_to_geodataframe
+
+def convert_to_geodataframe(
+    df: pd.DataFrame,
+    lat: str = 'lat',
+    long: str = 'long',
+    crs: str = 'EPSG:4326',
+) -> gpd.GeoDataFrame:
+    """Convert pandas dataframe to a geopandas dataframe
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        input pandas dataframe
+    lat : str, optional
+        latitude column name, by default 'lat'
+    long : str, optional
+        longitude column name, by default 'long'
+    crs : str, optional
+        coordinate reference system to use, by default 'EPSG:4326'
+
+    Returns
+    -------
+    gpd.GeoDataFrame
+        output geopandas dataframe
+    """
+    return gpd.GeoDataFrame(
+        df,
+        geometry=gpd.points_from_xy(x=df[long], y=df[lat]),
+        crs=crs,
+    )
 
 
 def main():
