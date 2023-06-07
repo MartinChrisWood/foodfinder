@@ -13,3 +13,4 @@ mapclassify
 matplotlib
 shapely
 pre-commit
+gunicorn
