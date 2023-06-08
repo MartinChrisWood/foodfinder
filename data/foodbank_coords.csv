@@ -1,38 +1,38 @@
-ID,name,address,postcode,phone,email,website,opening,referral_required,delivery_option,lat,long
+ID,name,address,postcode,phone,email,website,opening,referral_required,delivery_option,category,lat,long
 0,Hillsborough,66 Cross Bedford Street Sheffield,S6 3BS,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,"Tuesday 11.00 – 13.00
-Friday 11.00 – 13.00",0,0,53.3917,-1.4817
-1,Crookes,"St Thomas' Church, Nairn Street, Crookes",S10 1UL,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Tuesday 14.00 – 15.00,0,0,53.3819,-1.5078
-2,Parson Cross,"St Paul's Community Centre, 79 Wheata Road",S5 9FP,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Friday 11.00 – 13.00,0,0,53.4335,-1.4679
-3,Broomhall,"Broomhall Community Centre, Broomspring Lane",S10 2FD,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Monday 10.30 – 12.00,0,0,53.3784,-1.4873
-4,Sharrow,"Ship Shape, The Stables,  Sharrow Ln",S11 8AE,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Thursday 11.00 – 13.00,0,0,53.3671,-1.4772
-5,Winn Gardens,"Winn Gardens TARA building, 126 Winn Drive",S6 1UD,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Thursday 11.00 – 13.00,0,0,53.417,-1.5108
-6,Firth Park,"Firth Park Library, 443 Firth Park Road",S5 6QQ,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Thursday 11.00 – 13.00,0,0,53.4181,-1.4487
-7,Woodhouse,"Southern Light Church, Tannery Close",S13 7LA,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Friday 11.00 – 13.00,0,0,53.3581,-1.3701
-8,Arbourthorne,"The Spires Centre, 600 East Bank Road",S2 2AN,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Wednesday 11.00 – 13.00,0,0,53.3582,-1.4338
-9,Shirecliffe,"Shirecliffe Community Centre, 349 Shirecliffe Rd",S5 8XL,07838 263559,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Saturday 11.00 – 13.00,0,0,53.411,-1.4722
-10,Nether Edge / Abbeydale Road,"Common Ground Community Centre, St Peters Hall, Woodstock Rd",S7 1GR,0114 3210733,,www.facebook.com/NESFoodbank/,Tuesday 12.30 – 14.30,0,0,53.3592,-1.4819
-11,S2 Food Bank Network,"St Swithuns, 2 Cary Road",S2 1JP,07804 406267,info@s2foodbank.org.uk,www.s2foodbank.org.uk,Wednesday 12.00 - 14.00,1,0,53.3662,-1.4288
-12,Gleadless Valley Foodbank,"Gleadless Valley Methodist Church,
-Blackstock Road",S14 1FT,0114 2530315,info@gleadlessvalley.foodbank.org.uk,www.gleadlessvalley.foodbank.org.uk,Friday 12.00 - 14.30,1,0,53.3434,-1.4475
-13,Wybourn,"The Megacentre, Bernard Road",S2 5BQ,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Thursday 11.00 - 13.00,1,0,53.3856,-1.4507
-14,Burngreave,"Rock Christian Centre, 177 Spital Hill",S4 7LF,07542 888671,info@burngreave.foodbank.org.uk,burngreave.foodbank.org.uk,"Wednesday 13.00 - 15.00
-Friday 13.00 - 15.00",1,0,53.3912,-1.459
-15,Darnall,"Living Waters Christian Fellowship, 81 Main Road",S9 5HL,07542 888671,info@burngreave.foodbank.org.uk,burngreave.foodbank.org.uk,"Tuesday 13.00 - 15.00
-Thursday 13.00 - 15.00",1,0,53.3882,-1.4123
-16,Fir Vale,"St Cuthbert’s Church, Barnsley Road, Fir Vale",S5 6UA,,firvalefoodbank@gmail.com,www.facebook.com/groups/3062484973987592/,Thursday 12.00 - 14.00,1,0,53.4095,-1.4517
-17,Church on the Corner,1-5 Buchanan Road,S5 8AP,0114 2452970,churchonthecornerfoodbank@gmail.com,www.churchonthecorner.com,Thursday 10.00 - 11.00,1,0,53.4223,-1.4706
-18,International Worship Centre,"470 Bellhouse Road, Shiregreen",S5 0RF,,worship.icwcentre@gmail.com,www.facebook.com/ICWCSheffield/,Saturday 10.30 - 12.30,0,0,53.4277,-1.4419
-19,Longley 4G,,S5 7NN,0114 2134120,food@longley4g.org.uk,www.longley4g.org.uk,Wednesday 12.00 - 12.00,1,1,53.4176,-1.4717
-20,Stannington,Stanwood Methodist Church,S6 5HZ,07706 285280,jane_wall@hotmail.co.uk,www.facebook.com/Stannington-Foodbank-112968863665554/,Monday 12.00 - 13.00,0,0,53.3932,-1.5241
-21,Jordanthorpe,,S8 7JB,07580 516512,office@gracefoodbanksheffield.org.uk,www.gracefoodbanksheffield.org.uk,Tuesday 10.30 - 11.30,1,1,53.3206,-1.4911
-22,Lowedges,,S8 7JB,07580 516512,office@gracefoodbanksheffield.org.uk,www.gracefoodbanksheffield.org.uk,Thursday 13.45 - 14.45,1,1,53.3206,-1.4911
-23,New Hope,"Unit 3 Norwood Industrial Estate, Rotherham Close, Killamarsh",S21 2JU,07939 950713,jacquinewhopecommunity@outlook.com,www.newhopefoodbank.org.uk,All,1,1,53.3297,-1.302
+Friday 11.00 – 13.00",1,0,foodbank,53.3917,-1.4817
+1,Crookes,"St Thomas' Church, Nairn Street, Crookes",S10 1UL,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Tuesday 14.00 – 15.00,1,0,foodbank,53.3819,-1.5078
+2,Parson Cross,"St Paul's Community Centre, 79 Wheata Road",S5 9FP,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Friday 11.00 – 13.00,1,0,foodbank,53.4335,-1.4679
+3,Broomhall,"Broomhall Community Centre, Broomspring Lane",S10 2FD,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Monday 10.30 – 12.00,1,0,foodbank,53.3784,-1.4873
+4,Sharrow,"Ship Shape, The Stables,  Sharrow Ln",S11 8AE,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Thursday 11.00 – 13.00,1,0,foodbank,53.3671,-1.4772
+5,Winn Gardens,"Winn Gardens TARA building, 126 Winn Drive",S6 1UD,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Thursday 11.00 – 13.00,1,0,foodbank,53.417,-1.5108
+6,Firth Park,"Firth Park Library, 443 Firth Park Road",S5 6QQ,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Thursday 11.00 – 13.00,1,0,foodbank,53.4181,-1.4487
+7,Woodhouse,"Southern Light Church, Tannery Close",S13 7LA,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Friday 11.00 – 13.00,1,0,foodbank,53.3581,-1.3701
+8,Arbourthorne,"The Spires Centre, 600 East Bank Road",S2 2AN,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Wednesday 11.00 – 13.00,1,0,foodbank,53.3582,-1.4338
+9,Shirecliffe,"Shirecliffe Community Centre, 349 Shirecliffe Rd",S5 8XL,07838 263559,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Saturday 11.00 – 13.00,1,0,foodbank,53.411,-1.4722
+10,Nether Edge / Abbeydale Road,"Common Ground Community Centre, St Peters Hall, Woodstock Rd",S7 1GR,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Tuesday 12.30 – 14.30,1,0,foodbank,53.3592,-1.4819
+11,Nether Edge & Sharrow,"206, Club Garden Road",S11 8BX,07988 033534,,www.facebook.com/NESFoodbank/,Wednesday 18.00 – 19.00,0,0,foodbank,53.3685,-1.4797
+12,S2 Food Bank Network,"St Swithuns, 2 Cary Road",S2 1JP,07804 406267,info@s2foodbank.org.uk,www.s2foodbank.org.uk,Wednesday 12.00 - 14.00,1,0,foodbank,53.3662,-1.4288
+13,Gleadless Valley Foodbank,"Gleadless Valley Methodist Church,
+Blackstock Road",S14 1FT,0114 2530315,info@gleadlessvalley.foodbank.org.uk,gleadlessvalley.foodbank.org.uk,Friday 12.00 - 14.30,1,0,foodbank,53.3434,-1.4475
+14,Wybourn,"The Megacentre, Bernard Road",S2 5BQ,0114 3210733,info@sheffields6.foodbank.org.uk,sheffields6.foodbank.org.uk,Thursday 11.00 - 13.00,1,0,foodbank,53.3856,-1.4507
+15,Burngreave,"Rock Christian Centre, 177 Spital Hill",S4 7LF,07542 888671,info@burngreave.foodbank.org.uk,burngreave.foodbank.org.uk,"Wednesday 13.00 - 15.00
+Friday 13.00 - 15.00",1,0,foodbank,53.3912,-1.459
+16,Darnall,"Living Waters Christian Fellowship, 81 Main Road",S9 5HL,07542 888671,info@burngreave.foodbank.org.uk,burngreave.foodbank.org.uk,"Tuesday 13.00 - 15.00
+Thursday 13.00 - 15.00",1,0,foodbank,53.3882,-1.4123
+17,Fir Vale,"St Cuthbert’s Church, Barnsley Road, Fir Vale",S5 6UA,,firvalefoodbank@gmail.com,www.facebook.com/groups/3062484973987592/,Thursday 12.00 - 14.00,1,0,foodbank,53.4095,-1.4517
+18,Church on the Corner,1-5 Buchanan Road,S5 8AP,0114 2452970,churchonthecornerfoodbank@gmail.com,www.churchonthecorner.com,Thursday 10.00 - 11.00,1,0,foodbank,53.4223,-1.4706
+19,International Worship Centre,"470 Bellhouse Road, Shiregreen",S5 0RF,,worship.icwcentre@gmail.com,www.facebook.com/ICWCSheffield/,Saturday 10.30 - 12.30,0,0,foodbank,53.4277,-1.4419
+20,Longley 4G,,S5 7NN,0114 2134120,food@longley4g.org.uk,www.longley4g.org.uk,Wednesday 12.00 - 12.00,1,1,foodbank,53.4176,-1.4717
+21,Stannington,Stanwood Methodist Church,S6 5HZ,07706 285280,jane_wall@hotmail.co.uk,www.facebook.com/Stannington-Foodbank-112968863665554/,Monday 12.00 - 13.00,0,0,foodbank,53.3932,-1.5241
+22,Jordanthorpe,240 Lowedges road,S8 7JB,07580 516512,office@gracefoodbanksheffield.org.uk,www.gracefoodbanksheffield.org.uk,Tuesday 10.30 - 11.30,1,1,foodbank,53.3206,-1.4911
+23,New Hope,"Unit 3 Norwood Industrial Estate, Rotherham Close, Killamarsh",S21 2JU,07939 950713,jacquinewhopecommunity@outlook.com,www.newhopefoodbank.org.uk,All,1,1,foodbank,53.3297,-1.302
 24,Handsworth,"Grace Church Sheffield, 1 Richmond Road, Handsworth",S13 8TB,07599 878715,foodbank@gracechurchsheffield.co.uk,www.gracechurchsheffield.co.uk/foodbank,"Tuesday 12.00 - 14.00
-Thursday 16.00 - 18.00",1,1,53.3705,-1.3884
+Thursday 16.00 - 18.00",1,1,foodbank,53.3705,-1.3884
 25,S20,"S20 Information Station, Roche Meeting Rooms, Shortbrook Drive, Westfield",S20 8NF,07732 823028,s20foodbank@gmail.com,www.facebook.com/S20foodbank/,"Monday 9.00 - 12.00
 Tuesday 9.00 - 12.00
 Thursday 9.00 - 12.00
-Friday 9.00 - 12.00",1,0,53.33,-1.3498
-26,St Saviour's,"St Saviours Church, Mortomley Lane, High Green",S35 3HS,07561 699535,warden@stsaviours.info,www.stsaviours.info,Friday 13.00 - 15.00,0,0,53.4727,-1.4838
+Friday 9.00 - 12.00",1,0,foodbank,53.33,-1.3498
+26,St Saviour's,"St Saviours Church, Mortomley Lane, High Green",S35 3HS,07561 699535,warden@stsaviours.info,www.stsaviours.info,Friday 13.00 - 15.00,0,0,foodbank,53.4727,-1.4838
 27,Stocksbridge,"Ikon Campus, Manchester Road Stocksbridge",S36 2DU,07912 609 791,coordinator.foodmatters@gmail.com,stocksbridgefoodbank.org/,"Tuesday 10.00 - 12.00
-Thursday 10.00 - 13.00",1,0,53.4822,-1.5919
+Thursday 10.00 - 13.00",1,0,foodbank,53.4822,-1.5919
