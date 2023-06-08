@@ -31,6 +31,9 @@ def html_table(df):
     df_out['referral_required'] = np.where(df['referral_required'], "Yes", "")
     df_out['delivery_option'] = np.where(df['delivery_option'], "Yes", "")
 
+    # Mark out referral link
+    df_out['referral_link'] = '<a href="' + "https://" +  df_out['referral_link'] + '">' + df_out['referral_link'] + "</a>"
+
     df_out['information'] = np.where(df['referral_required'],
                                      "Referral needed",
                                      "")
@@ -41,14 +44,15 @@ def html_table(df):
     
     # Format table column heads for readability
     df_out = df_out.rename(
-        columns={"referral_required": "referral", "delivery_option": "delivery", "rank": "number"}
+        columns={"referral_required": "referral", "delivery_option": "delivery", "rank": "number", "referral_link": "referencing"}
     )[
         [
             "name",
             "address",
             "opening",
             "contact",
-            "information"
+            "information",
+            "referencing"
         ]
     ]
     df_out.columns = [col.capitalize() for col in df_out.columns]
