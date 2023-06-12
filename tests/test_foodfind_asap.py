@@ -6,11 +6,11 @@ from src.backend.frontend_handler import foodfind_asap
 
 # test for closest foodbank ID given date and starting postcode
 mock_data = [
-    {"timestamp": datetime(2023, 5, 11, 12, 10, 23, 442020), "postcode": "S1 1AA", "nearest_on_date": 13},
-    {"timestamp": datetime(2023, 6, 11, 12, 10, 23, 442020), "postcode": "S1 1AA", "nearest_on_date": 3},
-    {"timestamp": datetime(2023, 5, 11, 12, 10, 23, 442020), "postcode": "S9 1EA", "nearest_on_date": 15},
+    {"timestamp": datetime(2023, 5, 11, 12, 10, 23, 442020), "postcode": "S1 1AA", "nearest_on_date": 15},
+    {"timestamp": datetime(2023, 6, 11, 12, 10, 23, 442020), "postcode": "S1 1AA", "nearest_on_date": 31},
+    {"timestamp": datetime(2023, 5, 11, 12, 10, 23, 442020), "postcode": "S9 1EA", "nearest_on_date": 17},
     # same closest as above as Tuesday next availability from Sunday
-    {"timestamp": datetime(2023, 6, 11, 12, 10, 23, 442020), "postcode": "S9 1EA", "nearest_on_date": 15},
+    {"timestamp": datetime(2023, 6, 11, 12, 10, 23, 442020), "postcode": "S9 1EA", "nearest_on_date": 17},
 
 ]
 

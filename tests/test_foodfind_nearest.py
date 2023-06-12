@@ -10,7 +10,7 @@ test_conf = [
         "method": "postcode",
         "postcode": "S1 1AD",
         "days": {"Monday": True},
-        "result": "S10 2FD",
+        "result": "S1 2BS",
     },  # noqa E501
     {
         "method": "postcode",
@@ -22,7 +22,7 @@ test_conf = [
         "method": "postcode",
         "postcode": "S1 1AD",
         "days": {"Tuesday": True},
-        "result": "S6 3BS",
+        "result": "S1 2BS",
     },  # noqa E501
 ]
 

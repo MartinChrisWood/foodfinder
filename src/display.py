@@ -42,6 +42,8 @@ def html_table(df):
                                      df_out['information'] + "<br><hr>Makes deliveries",
                                      df_out['information'])
     
+    df_out['information'] = "<b>" + df_out['category'] + "</b><br><hr>" + df_out['information']
+    
     # Format table column heads for readability
     df_out = df_out.rename(
         columns={"referral_required": "referral", "delivery_option": "delivery", "rank": "number", "referral_link": "referencing"}
