@@ -76,5 +76,4 @@ def snap_to_nearest_postcode(
 
     # get closest as row within minimum distance and convert to a dict
     closest = pc_lookup.loc[pc_lookup['dist'].argmin(), :].to_dict()
-
     return closest

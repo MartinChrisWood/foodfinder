@@ -8,4 +8,9 @@ if (links.length) {
         link.classList.add("active");
     }
   });
+  navBrand = document.getElementById("navbar-brand");
+  navBrand.classList.remove("active");
+  if (navBrand.href === window.location.href) {
+    navBrand.classList.add("active");
+  }
 }

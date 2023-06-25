@@ -2,30 +2,86 @@ th, td {
     text-align: left;
 }
 
+h1, h2, h3, h4, h5 {
+    color: #122348;
+}
+
+p {
+    color:#1f3f85;
+}
+
+hr {
+    margin: 0;
+    margin-top: 10px;
+}
+
 table {
     width: 100%;
     border-spacing: 0px;
+    margin: 0 0;
+    padding: 0 0;
 }
 
 tr:hover {background-color: #c4e6c9;}
 
+.navbar-brand {
+    padding: 0 5px;
+}
+
+/* Padding works, color doesn't */
+.nav-link {
+    color: #122348;
+    padding: 3px 0;
+}
+
 /* Style the active class (and buttons on mouse-over) */
 .active {
-    background-color: #c2d4c1;
+    background-color: #d2c1d4;
     color: white;
-    
-  }
+}
 
-.content {
+.logo-top {
+    float: right;
+    height: 45px;
+}
+
+/* .content {
     float: left;
     width: 50%;
     padding: 20px;
     min-width: 400px;
+} */
+
+.container {
+    float: center;
+    width: 100%;
+    max-width: 1280px;
 }
 
 .buffer {
     clear: both;
     height: 100px;
+}
+
+
+.inputs {
+    float: left;
+    width: 30%;
+    padding: 10px;
+    min-width: 300px;
+}
+
+.map-holder {
+    margin: 0 0;
+    padding: 0 10px;
+    height: auto;
+    min-height: 450px;
+    min-width: 400px;
+}
+
+.output {
+    float:center;
+    min-width: 400px;
 }
 
 .footerlink {
@@ -37,8 +93,15 @@ footer {
     left: 0;
     bottom: 0;
     width: 100%;
+    margin-top: 700px;
     text-align: center;
     padding: 3px;
-    background-color: rgb(40, 122, 58);
+    background-color: #a30d56;
     color: white;
   }
+
+footer p, address {
+    color: white;
+    margin: 0 0;
+    padding: 0 0;
+}

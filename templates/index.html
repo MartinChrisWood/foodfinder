@@ -4,35 +4,32 @@
 
 {% block search %}
 <body onload="updateValue(30)">
-        <div style="padding:10px">
+        <div class="inputs">
             <form name="myForm" onsubmit="{{ url_for('index') }}" action="/" method="POST"
             enctype="multipart/form-data">
 
             <label for="query_type"><h2>Find a foodbank</h2></label>
-            <br>
-            <br>
-            <h5>
+            <hr>
             <input type="radio" name="query_type" value="ASAP"> as soon as possible, or
             <br>
             <input type="radio" name="query_type" value="nearest" checked>  on these specific days:
-            </h5>
-                  <input type="checkbox" id="mon" name="Monday" checked>
-                  <label for="mon">Mon &ensp;</label>
-                  <input type="checkbox" id="tue" name="Tuesday" checked>
-                  <label for="tue">Tue &ensp;</label>
-                  <input type="checkbox" id="wed" name="Wednesday" checked>
-                  <label for="wed">Wed &ensp;</label>
-                  <input type="checkbox" id="thu" name="Thursday" checked>
-                  <label for="thu">Thu &ensp;</label>
-                  <br>
-                  <input type="checkbox" id="fri" name="Friday" checked>
-                  <label for="fri">Fri &ensp;</label>
-                  <input type="checkbox" id="sat" name="Saturday" checked>
-                  <label for="sat">Sat &ensp;</label>
-                  <input type="checkbox" id="sun" name="Sunday" checked>
-                  <label for="sun">Sun &ensp;</label>
             <br>
+            <input type="checkbox" id="mon" name="Monday" checked>
+            <label for="mon">Mon &ensp;</label>
+            <input type="checkbox" id="tue" name="Tuesday" checked>
+            <label for="tue">Tue &ensp;</label>
+            <input type="checkbox" id="wed" name="Wednesday" checked>
+            <label for="wed">Wed &ensp;</label>
+            <input type="checkbox" id="thu" name="Thursday" checked>
+            <label for="thu">Thu &ensp;</label>
             <br>
+            <input type="checkbox" id="fri" name="Friday" checked>
+            <label for="fri">Fri &ensp;</label>
+            <input type="checkbox" id="sat" name="Saturday" checked>
+            <label for="sat">Sat &ensp;</label>
+            <input type="checkbox" id="sun" name="Sunday" checked>
+            <label for="sun">Sun &ensp;</label>
+            <hr>
             <label for="query_type"><h5>From location:</h5></label>
             <br>
             <script>
@@ -40,7 +37,7 @@
                     if ([{% for pcode in pc_list %}
                             "{{pcode}}",
                         {% endfor %}
-                    ].includes(val)) {
+                    ].includes(val.replace(/\s/g,''))) {
                         document.getElementById("check_mark").innerHTML = '&#10004' ;
                         document.querySelector('input[name="query_location"][value="postcode"]').checked = true;
                     }
@@ -71,15 +68,13 @@
             <input type="radio" name="query_location" value="coords" >
             <label for="coords">Map coordinates (click then search):</label>
             <input type="text" id="coords" name="coords" readonly size = "11" value="{{ request.form['coords'] }}" hidden>
-
-            <br>
-            <br>
             <script>
                 function updateValue(val) {
                     // document.getElementById("range_val").value = Math.round(val*val*val/1000)/10;
                     document.getElementById("range_val").value = val;
                 }
             </script>
+            <hr>
             <label for="travel_range"><h5>Within travel range:</h5></label>
             <br>
             <input type="range" min="1" max="30" value = '30' name="travel_range"
@@ -91,66 +86,64 @@
             <input type="submit" value="Search"/>
         </form>
         <br>
-        <br>
-        <br>
-        <br>
     </div>
+    <div id="map" class="map-holder"></div>
+    <br>
+    <script>
+        var map = L.map('map').setView([{{marker[0]}}, {{marker[1]}}], {{map_zoom}});
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+        }).addTo(map);
 
+        var marker;
+        marker  = L.marker([{{ marker[0] }}, {{ marker[1] }}],
+            {icon: L.ExtraMarkers.icon({
+                icon: 'fa-number',
+                number: 0,
+                markerColor: 'pink'
+            })}).addTo(map);
+
+        map.on('click', function(e) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            marker = L.marker(e.latlng,
+            {icon: L.ExtraMarkers.icon({
+                icon: 'fa-number',
+                number: 0,
+                markerColor: 'pink'
+            })}).addTo(map);
+            $('#lat-input').val(e.latlng.lat);
+            $('#lng-input').val(e.latlng.lng);
+            document.getElementById('coords').value = e.latlng.toString()
+            document.querySelector('input[name="query_location"][value="coords"]').checked = true;
+        });
+
+        {% for i in range(0, df.shape[0]) %}
+        L.marker([{{ df.loc[i, 'lat'] }}, {{ df.loc[i, 'long'] }}],
+            {icon: L.ExtraMarkers.icon({
+                icon: 'fa-number',
+                number: {{i+1}},
+                markerColor: "{{ df.loc[i, 'color'] }}"
+            })}).addTo(map)
+            .bindPopup('{{ df.loc[i, 'name'] }}');
+        {% endfor %}
+    </script>
+    </div>
 {% endblock %}
 
-
 {% block results %}
-<div id="map" style="height: 500px; padding:10px"></div>
-<br>
-<script>
-    var map = L.map('map').setView([{{marker[0]}}, {{marker[1]}}], {{map_zoom}});
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-    }).addTo(map);
-
-    var marker;
-    marker  = L.marker([{{ marker[0] }}, {{ marker[1] }}],
-        {icon: L.ExtraMarkers.icon({
-            icon: 'fa-number',
-            number: 0,
-            markerColor: 'pink'
-        })}).addTo(map);
-
-    map.on('click', function(e) {
-        if (marker) {
-            map.removeLayer(marker);
-        }
-        marker = L.marker(e.latlng,
-        {icon: L.ExtraMarkers.icon({
-            icon: 'fa-number',
-            number: 0,
-            markerColor: 'pink'
-        })}).addTo(map);
-        $('#lat-input').val(e.latlng.lat);
-        $('#lng-input').val(e.latlng.lng);
-        document.getElementById('coords').value = e.latlng.toString()
-        document.querySelector('input[name="query_location"][value="coords"]').checked = true;
-    });
-
-    {% for i in range(0, df.shape[0]) %}
-    L.marker([{{ df.loc[i, 'lat'] }}, {{ df.loc[i, 'long'] }}],
-        {icon: L.ExtraMarkers.icon({
-            icon: 'fa-number',
-            number: {{i+1}},
-            markerColor: "{{ df.loc[i, 'color'] }}"
-        })}).addTo(map)
-        .bindPopup('{{ df.loc[i, 'name'] }}');
-    {% endfor %}
-
-</script>
-
-</div>
-<div class="container">
-    <table>
-      {{ foodbanks|safe }}
-    </table>
-</div>
+    <div id="tables" class="container">
+        <table>
+        {{ foodbanks|safe }}
+        </table>
+    </div>
+    <!-- Drags user view down to table once rendered -->
+    <script>
+        var elementToView = document.getElementById("tables");
+        elementToView.scrollIntoView();
+    </script>
 
 {% endblock %}
