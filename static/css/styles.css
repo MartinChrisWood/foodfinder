@@ -10,6 +10,11 @@ p {
     color:#1f3f85;
 }
 
+hr {
+    margin: 0;
+    margin-top: 10px;
+}
+
 table {
     width: 100%;
     border-spacing: 0px;
@@ -33,7 +38,6 @@ tr:hover {background-color: #c4e6c9;}
 .active {
     background-color: #d2c1d4;
     color: white;
-    
 }
 
 .logo-top {
@@ -71,7 +75,7 @@ tr:hover {background-color: #c4e6c9;}
     margin: 0 0;
     padding: 0 10px;
     height: auto;
-    min-height: 500px;
+    min-height: 450px;
     min-width: 400px;
 }
 
