@@ -25,7 +25,7 @@ def html_table(df):
     df_out['contact'] = df_out.apply(lambda row: "<br>".join([row['website'], row['email'], row['phone']]), axis=1)
 
     # Reformat address and postcode into one field, for compact display
-    df_out['address'] = df_out['address'].str.replace("\n", "<br>") + "<br>" + df_out['postcode']
+    df_out['address'] = df_out['address'].str.replace("\n", "<br>").str.replace("\r", "") + "<br>" + df_out['postcode']
 
     # Mark metadata clearly
     df_out['referral_required'] = np.where(df['referral_required'], "Yes", "")
