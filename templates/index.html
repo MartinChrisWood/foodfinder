@@ -4,7 +4,7 @@
 
 {% block search %}
 <body onload="updateValue(30)">
-        <div style="padding:10px">
+        <div class="inputs">
             <form name="myForm" onsubmit="{{ url_for('index') }}" action="/" method="POST"
             enctype="multipart/form-data">
 
@@ -95,62 +95,58 @@
         <br>
         <br>
     </div>
+    <div id="map" class="map-holder"></div>
+    <br>
+    <script>
+        var map = L.map('map').setView([{{marker[0]}}, {{marker[1]}}], {{map_zoom}});
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+        }).addTo(map);
 
+        var marker;
+        marker  = L.marker([{{ marker[0] }}, {{ marker[1] }}],
+            {icon: L.ExtraMarkers.icon({
+                icon: 'fa-number',
+                number: 0,
+                markerColor: 'pink'
+            })}).addTo(map);
+
+        map.on('click', function(e) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            marker = L.marker(e.latlng,
+            {icon: L.ExtraMarkers.icon({
+                icon: 'fa-number',
+                number: 0,
+                markerColor: 'pink'
+            })}).addTo(map);
+            $('#lat-input').val(e.latlng.lat);
+            $('#lng-input').val(e.latlng.lng);
+            document.getElementById('coords').value = e.latlng.toString()
+            document.querySelector('input[name="query_location"][value="coords"]').checked = true;
+        });
+
+        {% for i in range(0, df.shape[0]) %}
+        L.marker([{{ df.loc[i, 'lat'] }}, {{ df.loc[i, 'long'] }}],
+            {icon: L.ExtraMarkers.icon({
+                icon: 'fa-number',
+                number: {{i+1}},
+                markerColor: "{{ df.loc[i, 'color'] }}"
+            })}).addTo(map)
+            .bindPopup('{{ df.loc[i, 'name'] }}');
+        {% endfor %}
+    </script>
+    </div>
 {% endblock %}
 
-
 {% block results %}
-<div id="map" style="height: 500px; padding:10px"></div>
-<br>
-<script>
-    var map = L.map('map').setView([{{marker[0]}}, {{marker[1]}}], {{map_zoom}});
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-    }).addTo(map);
-
-    var marker;
-    marker  = L.marker([{{ marker[0] }}, {{ marker[1] }}],
-        {icon: L.ExtraMarkers.icon({
-            icon: 'fa-number',
-            number: 0,
-            markerColor: 'pink'
-        })}).addTo(map);
-
-    map.on('click', function(e) {
-        if (marker) {
-            map.removeLayer(marker);
-        }
-        marker = L.marker(e.latlng,
-        {icon: L.ExtraMarkers.icon({
-            icon: 'fa-number',
-            number: 0,
-            markerColor: 'pink'
-        })}).addTo(map);
-        $('#lat-input').val(e.latlng.lat);
-        $('#lng-input').val(e.latlng.lng);
-        document.getElementById('coords').value = e.latlng.toString()
-        document.querySelector('input[name="query_location"][value="coords"]').checked = true;
-    });
-
-    {% for i in range(0, df.shape[0]) %}
-    L.marker([{{ df.loc[i, 'lat'] }}, {{ df.loc[i, 'long'] }}],
-        {icon: L.ExtraMarkers.icon({
-            icon: 'fa-number',
-            number: {{i+1}},
-            markerColor: "{{ df.loc[i, 'color'] }}"
-        })}).addTo(map)
-        .bindPopup('{{ df.loc[i, 'name'] }}');
-    {% endfor %}
-
-</script>
-
-</div>
-<div class="container">
-    <table>
-      {{ foodbanks|safe }}
-    </table>
-</div>
+    <div class="container">
+        <table>
+        {{ foodbanks|safe }}
+        </table>
+    </div>
 
 {% endblock %}

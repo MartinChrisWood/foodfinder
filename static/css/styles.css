@@ -23,9 +23,35 @@ tr:hover {background-color: #c4e6c9;}
     min-width: 400px;
 }
 
+.container {
+    display: inline-block;
+    width: 100%;
+}
+
 .buffer {
     clear: both;
     height: 100px;
+}
+
+
+.inputs {
+    float: left;
+    width: 30%;
+    padding: 10px;
+    min-width: 300px;
+}
+
+.map-holder {
+    margin: 0 0;
+    padding: 10px;
+    height: auto;
+    min-height: 500px;
+    min-width: 400px;
+}
+
+.output {
+    float:center;
+    min-width: 400px;
 }
 
 .footerlink {
