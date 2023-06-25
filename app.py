@@ -39,13 +39,14 @@ def index():
         map_zoom = MAP_ZOOM
 
         if query_location == "postcode":
-            postcode = request.form["pcode"]
+            postcode = request.form["pcode"].replace(" ", "")
             map_zoom = MAP_ZOOM + 2
-            marker = get_coords_from_postcode(request.form["pcode"])
+            marker = get_coords_from_postcode(postcode)
         
         elif query_location == "coords":
             map_zoom = MAP_ZOOM + 2
             marker = get_coords_from_coords(request.form["coords"])
+            print(marker)
 
         else:
             pass # For now, opportunity for better work here in future
@@ -74,6 +75,7 @@ def index():
                     method="postcode", postcode=postcode, dist_range=range * 1000, days=days
                 )
             else:
+                print("Looking for nearest")
                 foodbanks = foodfind_nearest(
                     method="place_from",
                     place_from=Point(marker[1], marker[0]),

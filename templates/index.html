@@ -38,7 +38,7 @@
                     if ([{% for pcode in pc_list %}
                             "{{pcode}}",
                         {% endfor %}
-                    ].includes(val)) {
+                    ].includes(val.replace(/\s/g,''))) {
                         document.getElementById("check_mark").innerHTML = '&#10004' ;
                         document.querySelector('input[name="query_location"][value="postcode"]').checked = true;
                     }

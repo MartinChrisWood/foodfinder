@@ -5,7 +5,7 @@ import pandas as pd
 
 
 PC_DATA = pd.read_csv("data/shef_pc_coords_lookup.csv")
-PC_LIST = PC_DATA['postcode'].to_list()
+PC_LIST = PC_DATA['postcode'].str.replace(" ", "").to_list()
 
 
 def get_coords_from_postcode(postcode):
