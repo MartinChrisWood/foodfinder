@@ -13,7 +13,6 @@ FOODBANKS_PATH = "data/foodbank_coords.csv"
 
 # read od matrix and foodbanks
 OD_MATRIX = pd.read_csv(OD_MATRIX_PATH)
-OD_MATRIX['postcode'] = OD_MATRIX['postcode'].str.replace(" ", "")
 FOODBANKS = pd.read_csv(FOODBANKS_PATH)
 
 
