@@ -16,7 +16,12 @@ tr:hover {background-color: #c4e6c9;}
     background-color: #c2d4c1;
     color: white;
     
-  }
+}
+
+.logo-top {
+    float: right;
+    height: 45px;
+}
 
 /* .content {
     float: left;
