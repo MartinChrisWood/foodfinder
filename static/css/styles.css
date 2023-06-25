@@ -2,6 +2,14 @@ th, td {
     text-align: left;
 }
 
+h1, h2, h3, h4, h5 {
+    color: #122348;
+}
+
+p {
+    color:#1f3f85;
+}
+
 table {
     width: 100%;
     border-spacing: 0px;
@@ -11,9 +19,19 @@ table {
 
 tr:hover {background-color: #c4e6c9;}
 
+.navbar-brand {
+    padding: 0 5px;
+}
+
+/* Padding works, color doesn't */
+.nav-link {
+    color: #122348;
+    padding: 3px 0;
+}
+
 /* Style the active class (and buttons on mouse-over) */
 .active {
-    background-color: #c2d4c1;
+    background-color: #d2c1d4;
     color: white;
     
 }
@@ -74,11 +92,12 @@ footer {
     margin-top: 700px;
     text-align: center;
     padding: 3px;
-    background-color: rgb(40, 122, 58);
+    background-color: #a30d56;
     color: white;
   }
 
 footer p, address {
+    color: white;
     margin: 0 0;
     padding: 0 0;
 }

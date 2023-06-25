@@ -7,8 +7,8 @@
 <div>
     <h2>Foodfinder App</h2>
     <ul>
-        <li><a href="https://github.com/OzwaldCavendish/foodfinder">GitHub repo</a></li>
-        <li><a href="#">Heroku hosting</a></li>
+        <li><a href="https://github.com/OzwaldCavendish/foodfinder">GitHub repository</a></li>
+        <li><a href="https://heroku.com">Hosted using heroku</a></li>
     </ul>
 </div>
 
@@ -17,6 +17,7 @@
 {% block results %}
 <br>
 <div>
+    <hr>
     <h2>This application</h2>
     <p> Was created on behalf of
         <a href="https://sheffield.cityofsanctuary.org/">City of Sanctuary, Sheffield</a>
@@ -31,6 +32,7 @@
     <p>
         The website's underlying dataset, which we maintain manually, can be downloaded in full from <a href={{ url_for("static", filename="foodbanks.csv") }}>here</a>.
     </p>
+    <hr>
     <h2>Organisations</h2>
     <p>With thanks to the VAS new beginnings project, City of Sanctuary Sheffield, SAVTE, Citizens Advice Sheffield, Sheffield City Council, and Solace. This project is part funded by the EU Asylum, Migration and Integration Fund. Making management of migration flows more efficient across the European Union.</p>
     <img src={{ url_for('static', filename='img/spring_logos_all.png') }}
