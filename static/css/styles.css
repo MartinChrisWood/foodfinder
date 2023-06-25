@@ -5,6 +5,8 @@ th, td {
 table {
     width: 100%;
     border-spacing: 0px;
+    margin: 0 0;
+    padding: 0 0;
 }
 
 tr:hover {background-color: #c4e6c9;}
@@ -16,16 +18,17 @@ tr:hover {background-color: #c4e6c9;}
     
   }
 
-.content {
+/* .content {
     float: left;
     width: 50%;
     padding: 20px;
     min-width: 400px;
-}
+} */
 
 .container {
-    display: inline-block;
+    float: center;
     width: 100%;
+    max-width: 1280px;
 }
 
 .buffer {
@@ -43,7 +46,7 @@ tr:hover {background-color: #c4e6c9;}
 
 .map-holder {
     margin: 0 0;
-    padding: 10px;
+    padding: 0 10px;
     height: auto;
     min-height: 500px;
     min-width: 400px;
@@ -63,8 +66,14 @@ footer {
     left: 0;
     bottom: 0;
     width: 100%;
+    margin-top: 700px;
     text-align: center;
     padding: 3px;
     background-color: rgb(40, 122, 58);
     color: white;
   }
+
+footer p, address {
+    margin: 0 0;
+    padding: 0 0;
+}

@@ -9,8 +9,7 @@
             enctype="multipart/form-data">
 
             <label for="query_type"><h2>Find a foodbank</h2></label>
-            <br>
-            <br>
+            <hr>
             <h5>
             <input type="radio" name="query_type" value="ASAP"> as soon as possible, or
             <br>
@@ -31,8 +30,7 @@
                   <label for="sat">Sat &ensp;</label>
                   <input type="checkbox" id="sun" name="Sunday" checked>
                   <label for="sun">Sun &ensp;</label>
-            <br>
-            <br>
+            <hr>
             <label for="query_type"><h5>From location:</h5></label>
             <br>
             <script>
@@ -71,15 +69,13 @@
             <input type="radio" name="query_location" value="coords" >
             <label for="coords">Map coordinates (click then search):</label>
             <input type="text" id="coords" name="coords" readonly size = "11" value="{{ request.form['coords'] }}" hidden>
-
-            <br>
-            <br>
             <script>
                 function updateValue(val) {
                     // document.getElementById("range_val").value = Math.round(val*val*val/1000)/10;
                     document.getElementById("range_val").value = val;
                 }
             </script>
+            <hr>
             <label for="travel_range"><h5>Within travel range:</h5></label>
             <br>
             <input type="range" min="1" max="30" value = '30' name="travel_range"
@@ -90,9 +86,6 @@
             <br>
             <input type="submit" value="Search"/>
         </form>
-        <br>
-        <br>
-        <br>
         <br>
     </div>
     <div id="map" class="map-holder"></div>
@@ -143,10 +136,15 @@
 {% endblock %}
 
 {% block results %}
-    <div class="container">
+    <div id="tables" class="container">
         <table>
         {{ foodbanks|safe }}
         </table>
     </div>
+    <!-- Drags user view down to table once rendered -->
+    <script>
+        var elementToView = document.getElementById("tables");
+        elementToView.scrollIntoView();
+    </script>
 
 {% endblock %}
