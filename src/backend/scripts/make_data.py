@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 import requests
 import toml
@@ -69,8 +70,12 @@ def foodbank_coords(DATA_DIR, pc_data):
     foodbanks = foodbanks.reset_index(names="ID")
 
     # Clean up text columns
-    foodbanks['name'] = foodbanks['name'].str.strip()
-    foodbanks['address'] = foodbanks['address'].str.strip()
+    foodbanks['name'] = foodbanks['name'].str.strip()                              # Removes additional whitespace
+    foodbanks['address'] = foodbanks['address'].str.strip()                        # Removes additional whitespace
+
+    clean_https = lambda link: re.sub("https://", "", link) if (type(link)==str) else link
+    foodbanks['referral_link'] = foodbanks['referral_link'].apply(clean_https)  # We add this back later, it messes with the formatting
+    foodbanks['website'] = foodbanks['website'].apply(clean_https)
 
     foodbanks.to_csv(f"{DATA_DIR}/foodbank_coords.csv", index=False)
     return None
