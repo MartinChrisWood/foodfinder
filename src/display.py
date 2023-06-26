@@ -32,7 +32,7 @@ def html_table(df):
     df_out['delivery_option'] = np.where(df['delivery_option'], "Yes", "")
 
     # Mark out referral link
-    df_out['referral_link'] = '<a href="' + "https://" +  df_out['referral_link'].str.strip("https://") + '">' + df_out['referral_link'] + "</a>"
+    df_out['referral_link'] = '<a href="' + "https://" +  df_out['referral_link'] + '">' + df_out['referral_link'] + "</a>"
 
     df_out['information'] = np.where(df['referral_required'],
                                      "Referral needed",
