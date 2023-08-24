@@ -106,3 +106,8 @@ footer p, address {
     margin: 0 0;
     padding: 0 0;
 }
+
+tr td:last-child {
+    max-width: 200px;
+    word-wrap: break-word;
+}

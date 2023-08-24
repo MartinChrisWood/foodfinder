@@ -2,6 +2,11 @@
 import numpy as np
 
 
+def clean_whitespace(x: str) -> str:
+    """ Cleans up different whitespace characters. """
+    return x.replace("\n", "<br>").replace("\r", "").strip()
+
+
 def html_table(df):
     """ Formats the information nicely for display purposes. """
     # Ranks, indexed from 1 for readability
@@ -12,8 +17,8 @@ def html_table(df):
     df_out = df_out.fillna("")
     
     # Replace newline characters with html break
-    df_out['opening'] = df_out['opening'].str.replace("\r", "")
-    df_out['opening'] = df_out['opening'].str.replace("\n", "<br>")
+    for col in ['opening', 'email', 'phone', 'address']:
+        df_out[col] = df_out[col].apply(clean_whitespace)
 
     # Tidy name and id number into one column
     df_out['name'] = "<b>" + df_out['rank'].astype(str) + "</b> - " + df_out['name']
