@@ -63,9 +63,17 @@ def foodbank_coords(DATA_DIR, pc_data):
     tidies formatting
     """
     foodbanks = pd.read_csv(f"{DATA_DIR}/foodbanks.csv")
+    print(foodbanks.shape)
     foodbanks.rename(columns={"Postcode": "postcode"}, inplace=True)
-    foodbanks['postcode'] = foodbanks['postcode'].str.replace(" ", "")
+    foodbanks['postcode'] = foodbanks['postcode'].str.replace(" ", "").str.strip()
+
+    bkp = foodbanks.copy()
     foodbanks = pd.merge(foodbanks, pc_data[["postcode", "lat", "long"]], on="postcode")
+    print(foodbanks.shape)
+    for code in bkp['postcode']:
+        if code not in list(foodbanks['postcode']):
+            print(code)
+
     foodbanks.columns = foodbanks.columns.str.lower()
     foodbanks = foodbanks.reset_index(names="ID")
 
@@ -77,6 +85,7 @@ def foodbank_coords(DATA_DIR, pc_data):
     foodbanks['referral_link'] = foodbanks['referral_link'].apply(clean_https)  # We add this back later, it messes with the formatting
     foodbanks['website'] = foodbanks['website'].apply(clean_https)
 
+    print(foodbanks.shape)
     foodbanks.to_csv(f"{DATA_DIR}/foodbank_coords.csv", index=False)
     return None
 
