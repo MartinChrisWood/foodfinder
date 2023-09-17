@@ -1,16 +1,16 @@
 import re
 
-from datetime import datetime
+from datetime import datetime as dt
 
 
 DAYS = {
-    "monday": 1,
-    "tuesday": 2,
-    "wednesday": 3,
-    "thursday": 4,
-    "friday": 5,
-    "saturday": 6,
-    "sunday": 0
+    "monday": 0,
+    "tuesday": 1,
+    "wednesday": 2,
+    "thursday": 3,
+    "friday": 4,
+    "saturday": 5,
+    "sunday": 6
 }
 
 # In case of obvious variant in source
@@ -84,3 +84,20 @@ def parse_times_entry(text: str) -> list[dict]:
         raise ValueError(f"Failing to read opening times from {text}")
 
     return entries
+
+
+def sort_soonest(current: dt, times: list[dict]) -> list[dict]:
+    """
+    Sort the list of opening time dicts by soonest open.
+    """
+    # Create copy, avoid altering source
+    opening_times = times.copy()
+    for time in opening_times:
+        # Get differences in seconds, modulo to positive-only
+        day_delta = ( (time['day'] - current.weekday()) % 7 ) * 60 * 60 * 24
+        open_delta = (day_delta + (dt.strptime(time['open'], "%H.%M") - dt.strptime(f"{current.hour}.{current.second}", "%H.%M")).total_seconds()) % (7*24*60*60)
+        close_delta = (day_delta + (dt.strptime(time['close'], "%H.%M") - dt.strptime(f"{current.hour}.{current.second}", "%H.%M")).total_seconds()) % (7*24*60*60)
+        time.update({"oD": open_delta, "cD": close_delta})
+
+        # sort key is nearest closing time, then nearest opening time
+    return sorted(opening_times, key = lambda x: min([x['oD'], x['cD']]))

@@ -2,7 +2,8 @@ import pytest
 
 from src.backend.parse_open_times import (
     parse_times_line,
-    parse_times_entry
+    parse_times_entry,
+    sort_soonest
 )
 
 TEST_LINES = [
@@ -19,17 +20,17 @@ TEST_DATA = [
 ]
 
 TEST_LINES_OUTPUTS = [
-    [{'day': 2, 'open': '11.00', 'close': '13.00'}],
-    [{'day': 2, 'open': '11.00', 'close': '13.00'},
+    [{'day': 1, 'open': '11.00', 'close': '13.00'}],
+    [{'day': 1, 'open': '11.00', 'close': '13.00'},
+     {'day': 2, 'open': '11.00', 'close': '13.00'},
      {'day': 3, 'open': '11.00', 'close': '13.00'},
-     {'day': 4, 'open': '11.00', 'close': '13.00'},
-     {'day': 5, 'open': '11.00', 'close': '13.00'}],
-    [{'day': 4, 'open': '9.00', 'close': '14.00'},
-     {'day': 5, 'open': '9.00', 'close': '14.00'},
+     {'day': 4, 'open': '11.00', 'close': '13.00'}],
+    [{'day': 5, 'open': '9.00', 'close': '14.00'},
      {'day': 6, 'open': '9.00', 'close': '14.00'},
      {'day': 0, 'open': '9.00', 'close': '14.00'},
      {'day': 1, 'open': '9.00', 'close': '14.00'},
-     {'day': 2, 'open': '9.00', 'close': '14.00'}]
+     {'day': 2, 'open': '9.00', 'close': '14.00'},
+     {'day': 3, 'open': '9.00', 'close': '14.00'}]
 ]
 
 
@@ -43,8 +44,8 @@ def test_parse_times_line():
     # Check a range of dates process as expected
     time_out = parse_times_line(TEST_LINES[1])
     print(time_out)
-    assert time_out[0]['day'] == 2
-    assert time_out[3]['day'] == 5
+    assert time_out[0]['day'] == 1
+    assert time_out[3]['day'] == 4
     assert len(time_out) == 4
 
     # Check handling of weirdly ordered days
@@ -60,3 +61,15 @@ def test_parse_times_entry():
     time_out = parse_times_entry(TEST_DATA[1])
     print(time_out)
     assert len(time_out) == 2
+
+
+def test_sort_soonest():
+    from datetime import datetime as dt
+
+    current = dt.now()
+
+    result = sort_soonest(current, TEST_LINES_OUTPUTS[2])
+    print(result)
+    soonest = result[0]
+    nextest = result[1]
+    assert min([soonest['oD'], soonest['cD']]) < min([nextest['oD'], nextest['cD']])
