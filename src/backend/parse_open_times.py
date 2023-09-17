@@ -89,9 +89,19 @@ def parse_times_entry(text: str) -> list[dict]:
 def sort_soonest(current: dt, times: list[dict]) -> list[dict]:
     """
     Sort the list of opening time dicts by soonest open.
+
+    Args:
+        current (dt): A datetime object from which to calculate
+        times (list[dict]): list of opening time dicts, of
+            form {'day': 1, 'open': '%H.%M', 'close': '%H.%M'}
+    
+    Returns:
+        ordered list of dicts with original fields plus timedelta
+            values 'oD' and 'cD', in seconds
     """
     # Create copy, avoid altering source
     opening_times = times.copy()
+
     for time in opening_times:
         # Get differences in seconds, modulo to positive-only
         day_delta = ( (time['day'] - current.weekday()) % 7 ) * 60 * 60 * 24
@@ -99,5 +109,5 @@ def sort_soonest(current: dt, times: list[dict]) -> list[dict]:
         close_delta = (day_delta + (dt.strptime(time['close'], "%H.%M") - dt.strptime(f"{current.hour}.{current.second}", "%H.%M")).total_seconds()) % (7*24*60*60)
         time.update({"oD": open_delta, "cD": close_delta})
 
-        # sort key is nearest closing time, then nearest opening time
+    # sort key is nearest closing time, then nearest opening time
     return sorted(opening_times, key = lambda x: min([x['oD'], x['cD']]))
