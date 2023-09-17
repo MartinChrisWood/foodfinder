@@ -58,11 +58,11 @@ def postcode_to_coords(DATA_DIR):
     return shef_postcodes
 
 
-def foodbank_coords(DATA_DIR, pc_data):
+def foodbank_coords(DATA_DIR, source_file, pc_data):
     """Assigns coordinates to foodbank postcodes and
     tidies formatting
     """
-    foodbanks = pd.read_csv(f"{DATA_DIR}/foodbanks.csv")
+    foodbanks = pd.read_csv(f"{DATA_DIR}/{source_file}")
     print(foodbanks.shape)
     foodbanks.rename(columns={"Postcode": "postcode"}, inplace=True)
     foodbanks['postcode'] = foodbanks['postcode'].str.replace(" ", "").str.strip()
@@ -97,9 +97,8 @@ def main():
     with open("pipeline.toml", "r") as f:
         config = toml.load(f)
 
-    DATA_DIR = config["DATA_DIR"]
-    pc_data = postcode_to_coords(DATA_DIR)
-    foodbank_coords(DATA_DIR, pc_data)
+    pc_data = postcode_to_coords(config["DATA_DIR"])
+    foodbank_coords(config["DATA_DIR"], config['RAW_FILENAME'], pc_data)
 
 
 if __name__=="__main__":
