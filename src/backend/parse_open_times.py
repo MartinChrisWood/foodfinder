@@ -45,19 +45,19 @@ def parse_times_line(text: str) -> list[dict]:
     days = []
     times = []
 
+    # Only need to detect days of week and times within a line
     for token in text:
         day = DAYS.get(token, None)
 
-        # Detect
         if day:
             days.append(day)
         
-        if re.match(r"\d+\D\d\d", token):
+        elif re.match(r"\d+\D\d\d", token):
             times.append(token)
 
+    # Expand range of days to entry for each day
     opening_hours = []
     i = days[0]
-
     while True:
         opening_hours.append(
             {"day": i,
@@ -66,11 +66,21 @@ def parse_times_line(text: str) -> list[dict]:
         )
         if i == days[-1]:
             break
-        i = (i+1) % 7
+        i = (i+1) % 7    # Use modulo to iterate forward over week
 
     return opening_hours
 
 
-if __name__ == "__main__":
-    print(parse_times_line("Tuesday 11.00-13.00"))
-    print(parse_times_line("Tuesday to Friday 11.00-13.00"))
+def parse_times_entry(text: str) -> list[dict]:
+    """
+    Wrapper, really just splits lines and validates
+    that something was read.
+    """
+    entries = []
+    for line in text.split("\n"):
+        entries = entries + parse_times_line(line)
+    
+    if len(entries) == 0:
+        raise ValueError(f"Failing to read opening times from {text}")
+
+    return entries
